@@ -1,0 +1,62 @@
+import mongoose from "mongoose";
+
+export enum ProductStatusEnum {
+  IN_STOCK = "in stock",
+  OUT_STOCK = "out stock",
+}
+export interface IProduct {
+  _id: string;
+  status: ProductStatusEnum;
+  title: string;
+  desc: string;
+  price: number;
+  qte: number;
+  imgUrl: string;
+  color: string;
+  size: string;
+  deliveryDate: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const ProudctSchema = new mongoose.Schema<IProduct>(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    desc: {
+      type: String,
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    qte: {
+      type: Number,
+      required: true,
+    },
+    imgUrl: {
+      type: String,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    size: {
+      type: String,
+      required: true,
+    },
+    deliveryDate: {
+      type: Date,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const ProductModel = mongoose.model("products", ProudctSchema);
