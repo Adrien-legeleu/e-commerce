@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { Auth, Home } from "../Pages";
-import { useUserContext } from "../contexts/userContext";
+import { useAdminContext } from "../contexts/userContext";
 
 export const Router = () => {
-  const { isAuthenticated } = useUserContext();
+  const { isAuthenticated } = useAdminContext();
 
   return isAuthenticated ? (
     <div>
