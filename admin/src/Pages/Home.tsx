@@ -1,11 +1,43 @@
-import { useAdminContext } from "../contexts/userContext";
+import { useState } from "react";
+import { Header } from "../components/header";
+import { CreateProduct, Products, UpdateProduct } from "../components/products";
 
 export const Home = () => {
-  const { onLogout } = useAdminContext(); // Call the hook correctly
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
+  const [isOpeUpdateModal, setIsOpenUpdateModal] = useState(false);
+
+  const openUpdateModal = () => {
+    setIsOpenUpdateModal(true);
+  };
+
+  const openCreateModal = () => {
+    setIsOpenCreateModal(true);
+  };
+  const closeCreateModal = () => {
+    setIsOpenCreateModal(false);
+  };
+  const closeUpdateModal = () => {
+    setIsOpenUpdateModal(false);
+  };
+
   return (
     <div>
-      <h1>Bienvenue</h1>
-      <button onClick={onLogout}>Logout</button>
+      <Header />
+      <div className="py-10 flex items-center justify-center">
+        <button
+          className="py-3 px-6 bg-slate-200 rounded-full"
+          onClick={openCreateModal}
+        >
+          Create products
+        </button>
+      </div>
+      <Products openUpdateModal={openUpdateModal} />
+      {isOpenCreateModal && (
+        <CreateProduct closeCreateModal={closeCreateModal} />
+      )}
+      {isOpeUpdateModal && (
+        <UpdateProduct closeUpdateModal={closeUpdateModal} />
+      )}
     </div>
   );
 };
