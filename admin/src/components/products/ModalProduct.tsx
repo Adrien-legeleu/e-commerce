@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IProduct } from "../../types/product";
+import { Select } from "antd";
 
 interface ModalProps {
   closeModal: () => void;
@@ -19,6 +20,27 @@ interface ModalProps {
   initialProductData?: Partial<IProduct>;
 }
 
+const colorOptions = [
+  { value: "blue" },
+  { value: "red" },
+  { value: "yellow" },
+  { value: "brown" },
+  { value: "white" },
+  { value: "black" },
+  { value: "green" },
+  { value: "gray" },
+  { value: "multicolor" },
+];
+
+const sizeOptions = [
+  { value: "XS" },
+  { value: "S" },
+  { value: "M" },
+  { value: "L" },
+  { value: "XL" },
+  { value: "XXL" },
+];
+
 export const ModalProduct: React.FC<ModalProps> = ({
   closeModal,
   onSaveProduct,
@@ -26,19 +48,19 @@ export const ModalProduct: React.FC<ModalProps> = ({
   params,
   initialProductData,
 }) => {
-  const [dataProduct, setDataProduct] = useState({
+  const [dataProduct, setDataProduct] = useState<Partial<IProduct>>({
     title: initialProductData?.title || "",
     desc: initialProductData?.desc || "",
-    size: initialProductData?.size || "",
-    color: initialProductData?.color || "",
+    size: initialProductData?.size || undefined,
+    color: initialProductData?.color || undefined,
     qte: initialProductData?.qte || undefined,
     price: initialProductData?.price || undefined,
     deliveryDate: initialProductData?.deliveryDate || undefined,
     imgUrl: initialProductData?.imgUrl || "",
-    status: initialProductData?.status || undefined,
+    status: initialProductData?.status || "in stock",
   });
 
-  const changeProductValue = (key: string, value: string) => {
+  const changeProductValue = (key: keyof IProduct, value: any) => {
     setDataProduct((prev) => ({
       ...prev,
       [key]: value,
@@ -86,12 +108,51 @@ export const ModalProduct: React.FC<ModalProps> = ({
                     <select
                       name={key}
                       id={key}
-                      value={valueData}
-                      onChange={(e) => changeProductValue(key, e.target.value)}
+                      value={valueData as string | number | undefined}
+                      onChange={(e) =>
+                        changeProductValue(
+                          key as keyof IProduct,
+                          e.target.value
+                        )
+                      }
                     >
                       <option value="in stock">In stock</option>
-                      <option value="out of stock">Out of stock</option>
+                      <option value="out stock">Out of stock</option>
                     </select>
+                  </div>
+                );
+              }
+              if (key === "size") {
+                return (
+                  <div key={key}>
+                    <label>{fieldTitle}</label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select"
+                      value={valueData as string[] | undefined}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      style={{ width: "100%" }}
+                      options={sizeOptions}
+                    />
+                  </div>
+                );
+              }
+              if (key === "color") {
+                return (
+                  <div key={key}>
+                    <label>{fieldTitle}</label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select"
+                      value={valueData as string[] | undefined}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      style={{ width: "100%" }}
+                      options={colorOptions}
+                    />
                   </div>
                 );
               }
@@ -104,8 +165,13 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       type="text"
                       id={key}
                       name={key}
-                      value={valueData}
-                      onChange={(e) => changeProductValue(key, e.target.value)}
+                      value={valueData as string | number | undefined}
+                      onChange={(e) =>
+                        changeProductValue(
+                          key as keyof IProduct,
+                          e.target.value
+                        )
+                      }
                       className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50 placeholder:opacity-0 focus:placeholder:opacity-100"
                     />
                     <label className="after:content[''] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none !overflow-visible truncate text-[11px] font-normal leading-tight text-gray-500 transition-all after:absolute after:-bottom-1.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-gray-500 after:transition-transform after:duration-300 peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[4.25] peer-placeholder-shown:text-blue-gray-500 peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-gray-900 peer-focus:after:scale-x-100 peer-focus:after:border-gray-900 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
@@ -120,7 +186,6 @@ export const ModalProduct: React.FC<ModalProps> = ({
             <button
               type="submit"
               className="py-3 px-5 rounded-full shadow-2xl bg-[#00000009] hover:scale-105 duration-150"
-              onClick={handleSaveProducts}
             >
               Sauvegarder
             </button>

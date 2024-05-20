@@ -33,7 +33,7 @@ export const AdminContextProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const onLogout = useCallback(() => {
-    localStorage.removeItem("authtoken");
+    localStorage.removeItem("authToken");
     setadmin(null);
     setIsAuthenticated(false);
     toast.success("You are now logged out !");

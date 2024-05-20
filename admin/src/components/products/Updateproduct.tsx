@@ -59,6 +59,7 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         color: true,
         imgUrl: true,
         qte: true,
+        status: true,
       }}
       initialProductData={{
         title: recipeToEdit?.title,

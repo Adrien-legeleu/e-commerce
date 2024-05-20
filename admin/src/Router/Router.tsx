@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Auth, Home } from "../Pages";
 import { useAdminContext } from "../contexts/userContext";
+import { ProductDetails } from "../components/products";
 
 export const Router = () => {
   const { isAuthenticated } = useAdminContext();
@@ -9,6 +10,7 @@ export const Router = () => {
     <div>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/:productId" element={<ProductDetails />} />
       </Routes>
     </div>
   ) : (

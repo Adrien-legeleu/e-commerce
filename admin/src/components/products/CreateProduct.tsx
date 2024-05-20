@@ -69,8 +69,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
       initialProductData={{
         title: "",
         desc: "",
-        size: "",
-        color: "",
+        size: undefined,
+        color: undefined,
         price: undefined,
         imgUrl: "",
         deliveryDate: undefined,
