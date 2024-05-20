@@ -8,7 +8,8 @@ export interface IProduct {
   imgUrl: string;
   color: string;
   size: string;
-  deliveryDate: Date;
+  status: "in stock" | "out stock";
+  deliveryDate: number;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -2,37 +2,75 @@ import { toast } from "react-toastify";
 import { api } from "../../config/api";
 import { ModalProduct } from "./ModalProduct";
 import React from "react";
+import { IProduct } from "../../types/product";
 
 interface UpdateProps {
   closeUpdateModal: () => void;
+  updateProduct: (productProperties: IProduct, productId: string) => void;
+  recipeToEdit: IProduct;
 }
 
-export const UpdateProduct: React.FC<UpdateProps> = ({ closeUpdateModal }) => {
-  const updateProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+export const UpdateProduct: React.FC<UpdateProps> = ({
+  closeUpdateModal,
+  updateProduct,
+  recipeToEdit,
+}) => {
+  const onSaveProduct = async (dataProduct: Partial<IProduct>) => {
     try {
-      e.preventDefault();
-      const data = new FormData(e.currentTarget);
+      const { title, desc, price, size, deliveryDate, color, imgUrl, qte } =
+        dataProduct;
 
-      const values = {
-        title: data.get("title"),
-        desc: data.get("desc"),
-        size: data.get("size"),
-        imgUrl: data.get("url-image"),
-        color: data.get("color"),
-        price: data.get("price"),
-        deliveryDate: data.get("delivery-date"),
-      };
-      await api.post("/products", values);
-      toast.success("Product created");
+      if (
+        !title ||
+        !desc ||
+        !price ||
+        !size ||
+        !deliveryDate ||
+        !color ||
+        !imgUrl ||
+        !qte
+      ) {
+        throw new Error(
+          "Title, description, size, price, delivery date, color, image URL, and quantity are required."
+        );
+      }
+
+      api.patch(`/products/${recipeToEdit._id}`, dataProduct);
+      updateProduct(dataProduct as IProduct, recipeToEdit._id);
+      toast.success("Product updated");
+      closeUpdateModal();
     } catch (error: any) {
       console.log(error);
-      toast.error("Error creating product");
+      toast.error("Error updating product");
     }
   };
+
   return (
     <ModalProduct
-      closeUpdateModal={closeUpdateModal}
-      updateProduct={updateProduct}
+      closeModal={closeUpdateModal}
+      onSaveProduct={onSaveProduct}
+      title="Edit your Product"
+      params={{
+        title: true,
+        desc: true,
+        price: true,
+        size: true,
+        deliveryDate: true,
+        color: true,
+        imgUrl: true,
+        qte: true,
+      }}
+      initialProductData={{
+        title: recipeToEdit?.title,
+        desc: recipeToEdit?.desc,
+        size: recipeToEdit?.size,
+        color: recipeToEdit?.color,
+        price: recipeToEdit?.price,
+        imgUrl: recipeToEdit?.imgUrl,
+        deliveryDate: recipeToEdit?.deliveryDate,
+        qte: recipeToEdit?.qte,
+        status: recipeToEdit?.status,
+      }}
     />
   );
 };
