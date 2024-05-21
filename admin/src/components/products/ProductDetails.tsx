@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../config/api";
 import { IProduct } from "../../types/product";
@@ -44,7 +44,7 @@ export const ProductDetails = () => {
           <p className="">Quantité : {product.qte}</p>
           <div>
             <p className="capitalize">couleurs disponibles :</p>
-            <ul className="flex gap-3 mt-4">
+            {/* <ul className="flex gap-3 mt-4">
               {product.color.map((color: any, index: any) => {
                 return (
                   <li
@@ -68,13 +68,10 @@ export const ProductDetails = () => {
                   </li>
                 );
               })}
-            </ul>
+            </ul> */}
           </div>
           <div className="pt-6 flex items-center justify-end gap-6">
-            <div
-              onClick={() => openUpdateModal(product)}
-              className="hover:scale-110 duration-150 cursor-pointer"
-            >
+            <div className="hover:scale-110 duration-150 cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="25px"
@@ -94,10 +91,7 @@ export const ProductDetails = () => {
               </svg>
             </div>
 
-            <div
-              onClick={() => deleteProduct(product._id)} // Corrected function name
-              className="hover:scale-110 duration-150 cursor-pointer"
-            >
+            <div className="hover:scale-110 duration-150 cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="28px"

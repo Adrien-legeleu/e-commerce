@@ -8,6 +8,7 @@ interface ProductAdminContextProps {
   recipeToEdit: IProduct | null;
   isOpenUpdateModal: boolean;
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
+  setIsOpenUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
   openUpdateModal: (product: IProduct) => void;
   deleteProduct: (productId: string) => Promise<void>;
 }
@@ -17,8 +18,9 @@ export const ProductAdminContext = createContext<ProductAdminContextProps>({
   recipeToEdit: null,
   isOpenUpdateModal: false,
   setProducts: () => {},
-  openUpdateModal: (product: IProduct) => {},
-  deleteProduct: async (productId: string) => {},
+  setIsOpenUpdateModal: () => {},
+  openUpdateModal: () => {},
+  deleteProduct: async () => {},
 });
 
 export const ProductAdminContextProvider = ({
@@ -57,6 +59,7 @@ export const ProductAdminContextProvider = ({
         products,
         recipeToEdit,
         isOpenUpdateModal,
+        setIsOpenUpdateModal,
       }}
     >
       {children}

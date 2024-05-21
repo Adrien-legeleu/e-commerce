@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { IProduct } from "../../types/product";
 import { CreateProduct } from "./CreateProduct";
-
 import { Link } from "react-router-dom";
 import { useProductAdminContext } from "../../contexts/productAdminContext";
-import { UpdateProduct } from "./Updateproduct";
+import { UpdateProduct } from "./UpdateProduct";
 
 export const Products = () => {
   const {
     deleteProduct,
     openUpdateModal,
     setProducts,
-    products,
     recipeToEdit,
     isOpenUpdateModal,
+    products,
+    setIsOpenUpdateModal,
   } = useProductAdminContext();
 
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
@@ -23,8 +23,8 @@ export const Products = () => {
     setIsOpenCreateModal(true);
   };
 
-  const onAddProduct = (productProperties: IProduct) => {
-    setProducts((prev) => [...prev, productProperties]);
+  const onAddProduct = (product: IProduct) => {
+    setProducts((prev) => [...prev, product]);
   };
 
   const updateProduct = (
@@ -78,21 +78,23 @@ export const Products = () => {
                   src="https://www.couturierparisien.fr/579-large_default/chemise-homme-casual-blanche.jpg"
                   alt={`img: ${product.title}`}
                 />
-                <div className="py-4 px-5 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full translate-y-5 invisible group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
+                <div className="py-4 px-5 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full  translate-y-5 invisible  group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
                   <p>{product.color}</p>
                   <p>{product.size}</p>
                 </div>
               </div>
               <div className="mt-3">
-                <h4 className="text-center">{product.title}</h4>
+                <h4 className="text-center text">{product.title}</h4>
                 <h5 className="text-center text-sm">{product.desc}</h5>
                 <ul className="mt-1">
-                  <li className="text-red-600 text-left">{product.price} €</li>
+                  <li className="text-red-600 text text-left">
+                    {product.price} €
+                  </li>
                   <li>
                     en stock : <strong>{product.qte}</strong>
                   </li>
                   {product.deliveryDate < 8 && (
-                    <li className="flex items-center">
+                    <li className="flex items-center ">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="1em"
@@ -141,7 +143,7 @@ export const Products = () => {
                 </div>
 
                 <div
-                  onClick={() => deleteProduct(product._id)}
+                  onClick={() => deleteProduct(product._id)} // Corrected function name
                   className="hover:scale-110 duration-150 cursor-pointer"
                 >
                   <svg
