@@ -60,10 +60,10 @@ export const CreateProduct: React.FC<CreateProps> = ({
         title: true,
         desc: true,
         price: true,
-        size: true,
         deliveryDate: true,
-        color: true,
         imgUrl: true,
+        color: true,
+        size: true,
         qte: true,
       }}
       initialProductData={{

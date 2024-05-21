@@ -6,17 +6,8 @@ export interface IProduct {
   price: number;
   qte: number;
   imgUrl: string;
-  color:
-    | "blue"
-    | "red"
-    | "yellow"
-    | "brown"
-    | "white"
-    | "black"
-    | "green"
-    | "gray"
-    | "multicolor";
-  size: "XS" | "S" | "M" | "L" | "Xl" | "XXL";
+  color: string[];
+  size: string[];
   status: "in stock" | "out stock";
   deliveryDate: number;
   createdAt: Date;

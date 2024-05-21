@@ -10,11 +10,11 @@ interface ModalProps {
     title: boolean;
     desc: boolean;
     price: boolean;
-    size: boolean;
     deliveryDate: boolean;
-    color: boolean;
     imgUrl: boolean;
     qte: boolean;
+    size: boolean;
+    color: boolean;
     status?: boolean;
   };
   initialProductData?: Partial<IProduct>;
@@ -85,7 +85,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
         className="fixed top-0 left-0 h-screen w-screen bg-[#00000060] backdrop-blur-sm"
         onClick={closeModal}
       ></div>
-      <div className="shadow-2xl bg-white w-1/2 z-10 py-10 px-20 rounded-3xl space-y-10 relative">
+      <div className="shadow-2xl bg-white w-3/4 z-10 pb-10 px-20 rounded-3xl space-y-10 relative">
         <div
           className="absolute top-6 right-8 w-10 h-10 hover:scale-110 duration-300 cursor-pointer group"
           onClick={closeModal}
@@ -95,7 +95,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
         </div>
         <h1 className="text-center text-2xl">{title}</h1>
         <form className="space-y-8" onSubmit={handleSaveProducts}>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-3 gap-8 ">
             {Object.entries(params).map(([key, value]) => {
               if (!value || !(key in dataProduct)) return null;
               const fieldTitle = key.charAt(0).toUpperCase() + key.slice(1);

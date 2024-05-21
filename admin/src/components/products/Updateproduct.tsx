@@ -54,22 +54,22 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         title: true,
         desc: true,
         price: true,
-        size: true,
         deliveryDate: true,
-        color: true,
         imgUrl: true,
         qte: true,
+        color: true,
+        size: true,
         status: true,
       }}
       initialProductData={{
         title: recipeToEdit?.title,
         desc: recipeToEdit?.desc,
-        size: recipeToEdit?.size,
-        color: recipeToEdit?.color,
         price: recipeToEdit?.price,
         imgUrl: recipeToEdit?.imgUrl,
         deliveryDate: recipeToEdit?.deliveryDate,
         qte: recipeToEdit?.qte,
+        size: recipeToEdit?.size,
+        color: recipeToEdit?.color,
         status: recipeToEdit?.status,
       }}
     />
