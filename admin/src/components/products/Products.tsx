@@ -2,20 +2,22 @@ import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { IProduct } from "../../types/product";
 import { CreateProduct } from "./CreateProduct";
-import { UpdateProduct } from "./Updateproduct";
-import { toast } from "react-toastify";
+
 import { Link } from "react-router-dom";
+import { useProductAdminContext } from "../../contexts/productAdminContext";
+import { UpdateProduct } from "./Updateproduct";
 
 export const Products = () => {
-  const [products, setProducts] = useState<IProduct[]>([]);
-  const [recipeToEdit, setRecipeToEdit] = useState<IProduct | null>(null);
-  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
-  const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false);
+  const {
+    deleteProduct,
+    openUpdateModal,
+    setProducts,
+    products,
+    recipeToEdit,
+    isOpenUpdateModal,
+  } = useProductAdminContext();
 
-  const openUpdateModal = (product: IProduct) => {
-    setRecipeToEdit(product);
-    setIsOpenUpdateModal(true);
-  };
+  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
 
   const openCreateModal = () => {
     setIsOpenCreateModal(true);
@@ -37,20 +39,6 @@ export const Products = () => {
         return product;
       });
     });
-  };
-
-  const deleteProduct = async (productId: string) => {
-    // Corrected function name
-    try {
-      await api.delete(`/products/${productId}`);
-      setProducts((prev) => {
-        return prev.filter((product: IProduct) => productId !== product._id);
-      });
-      toast.success("Product deleted");
-    } catch (error: any) {
-      console.error(error);
-      toast.error("Error: product not deleted");
-    }
   };
 
   const getProducts = async () => {
@@ -81,8 +69,8 @@ export const Products = () => {
         {products.map((product, index) => (
           <Link to={`/${product._id}`}>
             <div
-              key={`product number : ${index}`}
               className="hover:scale-105 cursor-pointer group duration-200"
+              key={index}
             >
               <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
                 <img
@@ -90,24 +78,21 @@ export const Products = () => {
                   src="https://www.couturierparisien.fr/579-large_default/chemise-homme-casual-blanche.jpg"
                   alt={`img: ${product.title}`}
                 />
-                <div className="py-4 px-5 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full  translate-y-5 invisible  group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
+                <div className="py-4 px-5 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full translate-y-5 invisible group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
                   <p>{product.color}</p>
                   <p>{product.size}</p>
                 </div>
               </div>
               <div className="mt-3">
-                <h4 className="text-center text">{product.title}</h4>
+                <h4 className="text-center">{product.title}</h4>
                 <h5 className="text-center text-sm">{product.desc}</h5>
                 <ul className="mt-1">
-                  <li className="text-red-600 text text-left">
-                    {product.price} €
-                  </li>
+                  <li className="text-red-600 text-left">{product.price} €</li>
                   <li>
                     en stock : <strong>{product.qte}</strong>
                   </li>
                   {product.deliveryDate < 8 && (
-                    <li className="flex items-center ">
-                      {" "}
+                    <li className="flex items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="1em"
@@ -117,9 +102,9 @@ export const Products = () => {
                         <g
                           fill="none"
                           stroke="black"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
                           color="black"
                         >
                           <path d="M19.5 17.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0m-10 0a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0" />
@@ -145,9 +130,9 @@ export const Products = () => {
                     <g
                       fill="none"
                       stroke="black"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                     >
                       <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                       <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1l1-4Z" />
@@ -156,7 +141,7 @@ export const Products = () => {
                 </div>
 
                 <div
-                  onClick={() => deleteProduct(product._id)} // Corrected function name
+                  onClick={() => deleteProduct(product._id)}
                   className="hover:scale-110 duration-150 cursor-pointer"
                 >
                   <svg
