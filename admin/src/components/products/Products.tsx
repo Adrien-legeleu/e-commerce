@@ -45,6 +45,7 @@ export const Products = () => {
     try {
       const response = await api.get<IProduct[]>("/products");
       setProducts(response.data);
+      console.log(response);
     } catch (error) {
       console.error(error);
     }

@@ -55,9 +55,9 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         desc: true,
         price: true,
         deliveryDate: true,
+        color: true,
         imgUrl: true,
         qte: true,
-        color: true,
         size: true,
         status: true,
       }}
