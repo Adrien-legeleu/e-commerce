@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IProduct } from "../../types/product";
-import { Button, Select, Upload } from "antd";
+import { Select } from "antd";
+import { FileProduct } from "./FileProduct";
 
 interface ModalProps {
   closeModal: () => void;
@@ -56,15 +57,16 @@ export const ModalProduct: React.FC<ModalProps> = ({
     qte: initialProductData?.qte || undefined,
     price: initialProductData?.price || undefined,
     deliveryDate: initialProductData?.deliveryDate || undefined,
-    imgUrl: initialProductData?.imgUrl || "",
+    imgUrl: initialProductData?.imgUrl || undefined,
     status: initialProductData?.status || "in stock",
   });
 
-  const changeProductValue = (key: keyof IProduct, value: any) => {
+  const changeProductValue = (key: keyof IProduct | string, value: any) => {
     setDataProduct((prev) => ({
       ...prev,
       [key]: value,
     }));
+    console.log(dataProduct);
   };
 
   const handleSaveProducts = async (event: React.FormEvent) => {
@@ -79,11 +81,24 @@ export const ModalProduct: React.FC<ModalProps> = ({
     }
   };
 
-  const [productImg, setProductImg] = useState("");
+  const handleProductImageUpload = (key: string, e: any) => {
+    const file = e.target.files[0];
 
-  const handleProductImageUpload = (e: any) => {
-    const file = e.target;
     console.log(file);
+    transformFile(key, file);
+  };
+
+  const transformFile = (key: string, file: any) => {
+    const reader = new FileReader();
+
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        changeProductValue(key, reader.result);
+      };
+    } else {
+      changeProductValue(key, "error");
+    }
   };
 
   return (
@@ -165,8 +180,11 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "imgUrl") {
                 return (
-                  <div key={key} onChange={handleProductImageUpload}>
-                    <input type="file" accept="image/" />
+                  <div
+                    key={key}
+                    onChange={(e) => handleProductImageUpload(key, e)}
+                  >
+                    <FileProduct />
                   </div>
                 );
               }

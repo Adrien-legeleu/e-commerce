@@ -72,12 +72,12 @@ export const Products = () => {
             <Link to={`/${product._id}`}>
               <div
                 className="hover:scale-105 cursor-pointer group duration-200"
-                key={index}
+                key={`product-${index}`}
               >
                 <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
                   <img
                     className="rounded-3xl w-full"
-                    src="https://www.couturierparisien.fr/579-large_default/chemise-homme-casual-blanche.jpg"
+                    src={product.imgUrl[0]}
                     alt={`img: ${product.title}`}
                   />
                   <div className="py-2 px-4 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full  translate-y-5 invisible  group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">

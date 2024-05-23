@@ -5,7 +5,7 @@ export interface IProduct {
   desc: string;
   price: number;
   qte: number;
-  imgUrl: string;
+  imgUrl: string[];
   color: string[];
   size: string[];
   status: "in stock" | "out stock";

@@ -72,7 +72,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         size: undefined,
         color: undefined,
         price: undefined,
-        imgUrl: "",
+        imgUrl: undefined,
         deliveryDate: undefined,
         qte: undefined,
         status: undefined,
