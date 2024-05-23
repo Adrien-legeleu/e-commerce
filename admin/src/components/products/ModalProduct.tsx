@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IProduct } from "../../types/product";
-import { Select } from "antd";
+import { Button, Select, Upload } from "antd";
 
 interface ModalProps {
   closeModal: () => void;
@@ -79,6 +79,13 @@ export const ModalProduct: React.FC<ModalProps> = ({
     }
   };
 
+  const [productImg, setProductImg] = useState("");
+
+  const handleProductImageUpload = (e: any) => {
+    const file = e.target;
+    console.log(file);
+  };
+
   return (
     <div className="fixed top-0 left-0 h-screen w-screen flex items-center justify-center">
       <div
@@ -153,6 +160,13 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       style={{ width: "100%" }}
                       options={colorOptions}
                     />
+                  </div>
+                );
+              }
+              if (key === "imgUrl") {
+                return (
+                  <div key={key} onChange={handleProductImageUpload}>
+                    <input type="file" accept="image/" />
                   </div>
                 );
               }
