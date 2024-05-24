@@ -1,54 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { Upload } from "antd";
-import type { UploadFile, UploadProps } from "antd";
-import ImgCrop from "antd-img-crop";
-import type { RcFile } from "antd/es/upload/interface";
+import React, { useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Image, Upload } from "antd";
+import type { GetProp, UploadFile, UploadProps } from "antd";
 
-type FileType = RcFile;
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-interface FileProductProps {
-  initialFileList?: any;
-}
+const getBase64 = (file: FileType): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
-export const FileProduct: React.FC<FileProductProps> = ({
-  initialFileList = [],
-}) => {
+const FileProduct: React.FC = () => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  useEffect(() => {
-    setFileList(initialFileList);
-  }, [initialFileList]);
-
-  const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
-
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
-        reader.onload = () => resolve(reader.result as string);
-      });
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
   };
 
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
+
+  const uploadButton = (
+    <button style={{ border: 0, background: "none" }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
   return (
-    <ImgCrop rotationSlider>
+    <>
       <Upload
         action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
         listType="picture-card"
         fileList={fileList}
-        onChange={onChange}
-        onPreview={onPreview}
+        onPreview={handlePreview}
+        onChange={handleChange}
       >
-        {fileList.length < 5 && "+ Upload"}
+        {fileList.length >= 8 ? null : uploadButton}
       </Upload>
-    </ImgCrop>
+      {previewImage && (
+        <Image
+          wrapperStyle={{ display: "none" }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(""),
+          }}
+          src={previewImage}
+        />
+      )}
+    </>
   );
 };
+
+export default FileProduct;

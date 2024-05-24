@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IProduct } from "../../types/product";
 import { Select } from "antd";
-import { FileProduct } from "./FileProduct";
+import FileProduct from "./FileProduct";
 
 interface ModalProps {
   closeModal: () => void;
@@ -82,6 +82,8 @@ export const ModalProduct: React.FC<ModalProps> = ({
   };
 
   const handleProductImageUpload = (key: string, e: any) => {
+    console.log(e);
+
     const file = e.target.files[0];
 
     console.log(file);
@@ -179,22 +181,14 @@ export const ModalProduct: React.FC<ModalProps> = ({
                 );
               }
               if (key === "imgUrl") {
-                const initialFileList = initialProductData?.imgUrl
-                  ? initialProductData.imgUrl.map((url, index) => ({
-                      uid: `-${index}`,
-                      name: `image${index + 1}.jpg`,
-                      status: "done",
-                      url,
-                    }))
-                  : [];
                 return (
                   <div
                     key={key}
                     onChange={(e) =>
-                      changeProductValue(key as keyof IProduct, e.target.value)
+                      handleProductImageUpload(key as keyof IProduct, e)
                     }
                   >
-                    <FileProduct initialFileList={initialFileList} />
+                    <FileProduct />
                   </div>
                 );
               }
