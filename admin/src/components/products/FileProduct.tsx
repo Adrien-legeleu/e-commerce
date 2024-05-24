@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Upload } from "antd";
-import type { GetProp, UploadFile, UploadProps } from "antd";
+import type { UploadFile, UploadProps } from "antd";
 import ImgCrop from "antd-img-crop";
+import type { RcFile } from "antd/es/upload/interface";
 
-type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+type FileType = RcFile;
 
-export const FileProduct: React.FC = () => {
+interface FileProductProps {
+  initialFileList?: any;
+}
+
+export const FileProduct: React.FC<FileProductProps> = ({
+  initialFileList = [],
+}) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
+  useEffect(() => {
+    setFileList(initialFileList);
+  }, [initialFileList]);
+
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
-    setFileList((prevFileList) => {
-      const uniqueFiles = newFileList.filter(
-        (newFile) =>
-          !prevFileList.some((prevFile) => prevFile.uid === newFile.uid)
-      );
-      return [...prevFileList, ...uniqueFiles];
-    });
+    setFileList(newFileList);
   };
 
   const onPreview = async (file: UploadFile) => {

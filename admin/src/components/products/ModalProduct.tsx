@@ -179,12 +179,22 @@ export const ModalProduct: React.FC<ModalProps> = ({
                 );
               }
               if (key === "imgUrl") {
+                const initialFileList = initialProductData?.imgUrl
+                  ? initialProductData.imgUrl.map((url, index) => ({
+                      uid: `-${index}`,
+                      name: `image${index + 1}.jpg`,
+                      status: "done",
+                      url,
+                    }))
+                  : [];
                 return (
                   <div
                     key={key}
-                    onChange={(e) => handleProductImageUpload(key, e)}
+                    onChange={(e) =>
+                      changeProductValue(key as keyof IProduct, e.target.value)
+                    }
                   >
-                    <FileProduct />
+                    <FileProduct initialFileList={initialFileList} />
                   </div>
                 );
               }
