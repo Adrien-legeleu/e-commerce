@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { IProduct } from "../../types/product";
 import { Select } from "antd";
 import FileProduct from "./FileProduct";
+import type { UploadFile } from "antd/lib/upload/interface";
 
 interface ModalProps {
   closeModal: () => void;
@@ -73,21 +74,25 @@ export const ModalProduct: React.FC<ModalProps> = ({
     event.preventDefault();
     try {
       await onSaveProduct(dataProduct);
-      console.log(dataProduct);
-
       closeModal();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleProductImageUpload = (key: string, e: any) => {
-    console.log(e);
+  const handleProductImageUpload = (key: string, fileList: UploadFile[]) => {
+    console.log(fileList);
 
-    const file = e.target.files[0];
+    fileList.map((file) => {
+      console.log("file");
+      console.log(file);
 
-    console.log(file);
-    transformFile(key, file);
+      const imgFile = file?.originFileObj; // Assurez-vous que fileList[0] existe avant d'accéder à originFileObj
+      console.log(key);
+
+      console.log(imgFile);
+      transformFile(key, imgFile);
+    });
   };
 
   const transformFile = (key: string, file: any) => {
@@ -182,13 +187,11 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "imgUrl") {
                 return (
-                  <div
-                    key={key}
-                    onChange={(e) =>
-                      handleProductImageUpload(key as keyof IProduct, e)
-                    }
-                  >
-                    <FileProduct />
+                  <div key={key}>
+                    <FileProduct
+                      imgUrlKey={key}
+                      handleProductImageUpload={handleProductImageUpload}
+                    />
                   </div>
                 );
               }

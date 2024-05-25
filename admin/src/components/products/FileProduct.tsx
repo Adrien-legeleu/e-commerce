@@ -2,8 +2,17 @@ import React, { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Image, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
+import { IProduct } from "../../types/product";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+
+interface IFileUploadProps {
+  handleProductImageUpload: (
+    imgUrlKey: keyof IProduct,
+    fileList: UploadFile[]
+  ) => void;
+  imgUrlKey: keyof IProduct;
+}
 
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -13,7 +22,10 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const FileProduct: React.FC = () => {
+const FileProduct: React.FC<IFileUploadProps> = ({
+  handleProductImageUpload,
+  imgUrlKey,
+}) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -22,20 +34,29 @@ const FileProduct: React.FC = () => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
     }
-
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+  // Dans FileProduct.tsx
+
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    console.log(imgUrlKey);
+    console.log("ezezeze");
+    console.log(newFileList);
+
+    // Ajoutez cet appel pour gérer le téléchargement des images
+    handleProductImageUpload(imgUrlKey, newFileList);
+  };
 
   const uploadButton = (
-    <button style={{ border: 0, background: "none" }} type="button">
+    <div>
       <PlusOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
-    </button>
+    </div>
   );
+
   return (
     <>
       <Upload
