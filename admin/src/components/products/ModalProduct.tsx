@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { IProduct } from "../../types/product";
 import { Select } from "antd";
 import FileProduct from "./FileProduct";
 import type { UploadFile } from "antd/lib/upload/interface";
+import type { IProduct } from "../../types/product";
 
 interface ModalProps {
   closeModal: () => void;
@@ -58,16 +58,19 @@ export const ModalProduct: React.FC<ModalProps> = ({
     qte: initialProductData?.qte || undefined,
     price: initialProductData?.price || undefined,
     deliveryDate: initialProductData?.deliveryDate || undefined,
-    imgUrl: initialProductData?.imgUrl || undefined,
+    imgUrl: initialProductData?.imgUrl || [],
     status: initialProductData?.status || "in stock",
   });
+
+  const [images, setImages] = useState<string[]>(
+    initialProductData?.imgUrl || []
+  );
 
   const changeProductValue = (key: keyof IProduct | string, value: any) => {
     setDataProduct((prev) => ({
       ...prev,
       [key]: value,
     }));
-    console.log(dataProduct);
   };
 
   const handleSaveProducts = async (event: React.FormEvent) => {
@@ -81,31 +84,9 @@ export const ModalProduct: React.FC<ModalProps> = ({
   };
 
   const handleProductImageUpload = (key: string, fileList: UploadFile[]) => {
-    console.log(fileList);
-
-    fileList.map((file) => {
-      console.log("file");
-      console.log(file);
-
-      const imgFile = file?.originFileObj; // Assurez-vous que fileList[0] existe avant d'accéder à originFileObj
-      console.log(key);
-
-      console.log(imgFile);
-      transformFile(key, imgFile);
-    });
-  };
-
-  const transformFile = (key: string, file: any) => {
-    const reader = new FileReader();
-
-    if (file) {
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        changeProductValue(key, reader.result);
-      };
-    } else {
-      changeProductValue(key, "error");
-    }
+    const newImages: string[] = fileList.map((file) => file.url || "");
+    setImages(newImages);
+    changeProductValue(key, newImages);
   };
 
   return (
@@ -187,15 +168,16 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "imgUrl") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="col-span-3">
+                    <label>{fieldTitle}</label>
                     <FileProduct
-                      imgUrlKey={key}
                       handleProductImageUpload={handleProductImageUpload}
+                      imgUrlKey={key as keyof IProduct}
+                      initialImages={images}
                     />
                   </div>
                 );
               }
-
               return (
                 <div key={key}>
                   <div className="relative h-11 w-full min-w-[200px]">
