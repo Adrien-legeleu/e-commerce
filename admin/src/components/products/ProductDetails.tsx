@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../../config/api";
 import { IProduct } from "../../types/product";
@@ -6,6 +6,7 @@ import { Header } from "../header";
 import { toast } from "react-toastify";
 import { UpdateProduct } from "./UpdateProduct";
 import { useProductAdminContext } from "../../contexts/productAdminContext";
+import Splide from "@splidejs/splide";
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -36,7 +37,6 @@ export const ProductDetails = () => {
       try {
         const response = await api.get<IProduct>(`/products/${productId}`);
         setProduct(response.data);
-        console.log(product);
       } catch (error) {
         console.error(error);
         toast.error("Impossible de charger le produit.");
@@ -47,13 +47,46 @@ export const ProductDetails = () => {
   }, [productId]);
 
   if (!product) {
-    return;
+    return null;
   }
+
+  const mainCarouselRef = useRef<HTMLDivElement | null>(null);
+  const thumbnailCarouselRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (mainCarouselRef.current && thumbnailCarouselRef.current) {
+      const main = new Splide(mainCarouselRef.current, {
+        type: "fade",
+        heightRatio: 0.5,
+        pagination: false,
+        arrows: false,
+        cover: true,
+      }).mount();
+
+      const thumbnails = new Splide(thumbnailCarouselRef.current, {
+        fixedWidth: 100,
+        fixedHeight: 64,
+        isNavigation: true,
+        gap: 10,
+        focus: "center",
+        pagination: false,
+        cover: true,
+        breakpoints: {
+          600: {
+            fixedWidth: 66,
+            fixedHeight: 40,
+          },
+        },
+      }).mount();
+
+      main.sync(thumbnails);
+    }
+  }, []);
 
   return (
     <div className="h-screen w-full flex flex-col">
       <Header />
-      <div className="flex flex-row-reverse  w-3/5 m-auto relative">
+      <div className="flex flex-row-reverse w-3/5 m-auto relative">
         <Link to="/">
           <div className="bg-[#000000D0] -left-40 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full">
             <svg
@@ -82,30 +115,26 @@ export const ProductDetails = () => {
           <div>
             <p className="capitalize">couleurs disponibles :</p>
             <ul className="flex gap-3 mt-4">
-              {product.color.map((color: any, index: any) => {
-                return (
-                  <li
-                    className={`w-8 h-6 rounded-full border-[1px] border-[#00000040] `}
-                    key={`color : ${index}  `}
-                    style={{ backgroundColor: color }}
-                  ></li>
-                );
-              })}
+              {product.color.map((color, index) => (
+                <li
+                  className={`w-8 h-6 rounded-full border-[1px] border-[#00000040]`}
+                  key={index}
+                  style={{ backgroundColor: color }}
+                ></li>
+              ))}
             </ul>
           </div>
           <div>
             <p className="capitalize">tailles disponibles :</p>
             <ul className="flex gap-3 mt-4">
-              {product.size.map((size: any, index: any) => {
-                return (
-                  <li
-                    className={`w-10 h-7 rounded-full border-[1px]  text-sm flex items-center justify-center border-[#00000040]`}
-                    key={`taille : ${index}  `}
-                  >
-                    {size}
-                  </li>
-                );
-              })}
+              {product.size.map((size, index) => (
+                <li
+                  className={`w-10 h-7 rounded-full border-[1px] text-sm flex items-center justify-center border-[#00000040]`}
+                  key={index}
+                >
+                  {size}
+                </li>
+              ))}
             </ul>
           </div>
           <div className="pt-6 flex items-center justify-end gap-6">
@@ -131,7 +160,6 @@ export const ProductDetails = () => {
                 </g>
               </svg>
             </div>
-
             <div
               className="hover:scale-110 duration-150 cursor-pointer"
               onClick={() => deleteProduct(product._id)}
@@ -153,14 +181,29 @@ export const ProductDetails = () => {
             </div>
           </div>
         </div>
-        <div>
-          {product.imgUrl.map((img, index) => {
-            return (
-              <div key={`img  ${index} `}>
-                <img src={img} alt={`img :  ${index} `} />
-              </div>
-            );
-          })}
+        <div className="w-full">
+          <div ref={mainCarouselRef} className="splide">
+            <div className="splide__track">
+              <ul className="splide__list">
+                {product.imgUrl.map((img, index) => (
+                  <li className="splide__slide" key={index}>
+                    <img src={img} alt={`img ${index}`} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div ref={thumbnailCarouselRef} className="splide mt-4">
+            <div className="splide__track">
+              <ul className="splide__list">
+                {product.imgUrl.map((img, index) => (
+                  <li className="splide__slide" key={index}>
+                    <img src={img} alt={`thumb ${index}`} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       {isOpenUpdateModal && recipeToEdit && (
