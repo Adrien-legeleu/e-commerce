@@ -1,3 +1,5 @@
+// In ProductDetails
+
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../../config/api";
@@ -19,6 +21,7 @@ export const ProductDetails = () => {
     recipeToEdit,
     isOpenUpdateModal,
     setIsOpenUpdateModal,
+    products,
   } = useProductAdminContext();
 
   const fetchProduct = async () => {
@@ -30,9 +33,18 @@ export const ProductDetails = () => {
       toast.error("Impossible de charger le produit.");
     }
   };
+
   useEffect(() => {
     fetchProduct();
-  }, []);
+  }, [productId]);
+
+  // Synchronize local product state with global state
+  useEffect(() => {
+    const updatedProduct = products.find((p) => p._id === productId);
+    if (updatedProduct) {
+      setProduct(updatedProduct);
+    }
+  }, [products, productId]);
 
   if (!product) {
     return null;
@@ -67,6 +79,11 @@ export const ProductDetails = () => {
           </div>
           <p className="text-red-700 text-xl">Prix : {product.price} €</p>
           <p className="">Quantité : {product.qte}</p>
+
+          <p>
+            Sexe : <span> {product.sexe}</span>{" "}
+          </p>
+
           <div>
             <p className="capitalize">couleurs disponibles :</p>
             <ul className="flex gap-3 mt-4">

@@ -15,8 +15,17 @@ export const CreateProduct: React.FC<CreateProps> = ({
 }) => {
   const onSaveProduct = async (dataProduct: Partial<IProduct>) => {
     try {
-      const { title, desc, price, size, deliveryDate, color, imgUrl, qte } =
-        dataProduct;
+      const {
+        title,
+        desc,
+        price,
+        size,
+        deliveryDate,
+        color,
+        imgUrl,
+        qte,
+        sexe,
+      } = dataProduct;
 
       if (
         !title ||
@@ -26,7 +35,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
         !deliveryDate ||
         !color ||
         !imgUrl ||
-        !qte
+        !qte ||
+        !sexe
       ) {
         throw new Error(
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
@@ -41,6 +51,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         color,
         qte,
         imgUrl,
+        sexe,
       };
       const response = await api.post("/products", newProduct);
       onAddProduct(response?.data);
@@ -65,6 +76,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         color: true,
         size: true,
         qte: true,
+        sexe: true,
       }}
       initialProductData={{
         title: "",
@@ -76,6 +88,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         deliveryDate: undefined,
         qte: undefined,
         status: undefined,
+        sexe: undefined,
       }}
     />
   );

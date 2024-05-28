@@ -126,6 +126,9 @@ export const Products = () => {
                     <li>
                       en stock : <strong>{product.qte}</strong>
                     </li>
+                    <li>
+                      sexe : <span>{product.sexe}</span>
+                    </li>
                     {product.deliveryDate < 8 && (
                       <li className="flex items-center ">
                         <svg

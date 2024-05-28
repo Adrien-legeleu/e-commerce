@@ -17,8 +17,17 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
   const { updateProduct } = useProductAdminContext();
   const onSaveProduct = async (dataProduct: Partial<IProduct>) => {
     try {
-      const { title, desc, price, size, deliveryDate, color, imgUrl, qte } =
-        dataProduct;
+      const {
+        title,
+        desc,
+        price,
+        size,
+        deliveryDate,
+        color,
+        imgUrl,
+        qte,
+        sexe,
+      } = dataProduct;
 
       if (
         !title ||
@@ -28,7 +37,8 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         !deliveryDate ||
         !color ||
         !imgUrl ||
-        !qte
+        !qte ||
+        !sexe
       ) {
         throw new Error(
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
@@ -59,6 +69,7 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         qte: true,
         size: true,
         status: true,
+        sexe: true,
       }}
       initialProductData={{
         title: recipeToEdit?.title,
@@ -70,6 +81,7 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         size: recipeToEdit?.size,
         color: recipeToEdit?.color,
         status: recipeToEdit?.status,
+        sexe: recipeToEdit?.sexe,
       }}
     />
   );

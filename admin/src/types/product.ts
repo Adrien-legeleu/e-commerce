@@ -12,4 +12,5 @@ export interface IProduct {
   deliveryDate: number;
   createdAt: Date;
   updatedAt: Date;
+  sexe: "Homme" | "Femme" | "Enfnat" | "Unisexe";
 }

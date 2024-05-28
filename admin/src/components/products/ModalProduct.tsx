@@ -18,6 +18,7 @@ interface ModalProps {
     size: boolean;
     color: boolean;
     status?: boolean;
+    sexe: boolean;
   };
   initialProductData?: Partial<IProduct>;
 }
@@ -42,6 +43,12 @@ const sizeOptions = [
   { value: "XL" },
   { value: "XXL" },
 ];
+const sexeOptions = [
+  { value: "Homme" },
+  { value: "Femme" },
+  { value: "Enfant" },
+  { value: "Unisexe" },
+];
 
 export const ModalProduct: React.FC<ModalProps> = ({
   closeModal,
@@ -60,6 +67,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
     deliveryDate: initialProductData?.deliveryDate || undefined,
     imgUrl: initialProductData?.imgUrl || [],
     status: initialProductData?.status || "in stock",
+    sexe: initialProductData?.sexe || undefined,
   });
 
   const [images, setImages] = useState<string[]>(
@@ -129,6 +137,24 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       <option value="in stock">In stock</option>
                       <option value="out stock">Out of stock</option>
                     </select>
+                  </div>
+                );
+              }
+              if (key === "sexe") {
+                return (
+                  <div key={key}>
+                    <label>{fieldTitle}</label>
+                    <Select
+                      showSearch
+                      placeholder="Select a person"
+                      value={valueData as string | undefined}
+                      optionFilterProp="children"
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      options={sexeOptions}
+                      style={{ width: "100%" }}
+                    />
                   </div>
                 );
               }
