@@ -3,18 +3,18 @@ import { api } from "../../config/api";
 import { ModalProduct } from "./ModalProduct";
 import React from "react";
 import { IProduct } from "../../types/product";
+import { useProductAdminContext } from "../../contexts/productAdminContext";
 
 interface UpdateProps {
   closeUpdateModal: () => void;
-  updateProduct: (productProperties: IProduct, productId: string) => void;
   recipeToEdit: IProduct;
 }
 
 export const UpdateProduct: React.FC<UpdateProps> = ({
   closeUpdateModal,
-  updateProduct,
   recipeToEdit,
 }) => {
+  const { updateProduct } = useProductAdminContext();
   const onSaveProduct = async (dataProduct: Partial<IProduct>) => {
     try {
       const { title, desc, price, size, deliveryDate, color, imgUrl, qte } =
@@ -34,13 +34,12 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
         );
       }
-
       api.patch(`/products/${recipeToEdit._id}`, dataProduct);
       updateProduct(dataProduct as IProduct, recipeToEdit._id);
       toast.success("Product updated");
       closeUpdateModal();
     } catch (error: any) {
-      console.log(error);
+      console.error("Error updating product:", error);
       toast.error("Error updating product");
     }
   };

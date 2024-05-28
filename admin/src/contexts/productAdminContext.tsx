@@ -11,6 +11,10 @@ interface ProductAdminContextProps {
   setIsOpenUpdateModal: React.Dispatch<React.SetStateAction<boolean>>;
   openUpdateModal: (product: IProduct) => void;
   deleteProduct: (productId: string) => Promise<void>;
+  updateProduct: (
+    productProperties: Partial<IProduct>,
+    productId: string
+  ) => any;
 }
 
 export const ProductAdminContext = createContext<ProductAdminContextProps>({
@@ -21,6 +25,7 @@ export const ProductAdminContext = createContext<ProductAdminContextProps>({
   setIsOpenUpdateModal: () => {},
   openUpdateModal: () => {},
   deleteProduct: async () => {},
+  updateProduct: async () => {},
 });
 
 export const ProductAdminContextProvider = ({
@@ -35,6 +40,20 @@ export const ProductAdminContextProvider = ({
   const openUpdateModal = (product: IProduct) => {
     setRecipeToEdit(product);
     setIsOpenUpdateModal(true);
+  };
+
+  const updateProduct = (
+    productProperties: Partial<IProduct>,
+    productId: string
+  ) => {
+    setProducts((prev) => {
+      return prev.map((product) => {
+        if (product._id === productId) {
+          return { ...product, ...productProperties };
+        }
+        return product;
+      });
+    });
   };
 
   const deleteProduct = async (productId: string) => {
@@ -60,6 +79,7 @@ export const ProductAdminContextProvider = ({
         recipeToEdit,
         isOpenUpdateModal,
         setIsOpenUpdateModal,
+        updateProduct,
       }}
     >
       {children}

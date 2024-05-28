@@ -27,20 +27,6 @@ export const Products = () => {
     setProducts((prev) => [...prev, product]);
   };
 
-  const updateProduct = (
-    productProperties: Partial<IProduct>,
-    productId: string
-  ) => {
-    setProducts((prev) => {
-      return prev.map((product) => {
-        if (product._id === productId) {
-          return { ...product, ...productProperties };
-        }
-        return product;
-      });
-    });
-  };
-
   const getProducts = async () => {
     try {
       const response = await api.get<IProduct[]>("/products");
@@ -223,7 +209,6 @@ export const Products = () => {
       {isOpenUpdateModal && recipeToEdit && (
         <UpdateProduct
           closeUpdateModal={() => setIsOpenUpdateModal(false)}
-          updateProduct={updateProduct}
           recipeToEdit={recipeToEdit}
         />
       )}
