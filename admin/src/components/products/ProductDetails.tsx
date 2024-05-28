@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../../config/api";
 import { IProduct } from "../../types/product";
@@ -6,7 +6,8 @@ import { Header } from "../header";
 import { toast } from "react-toastify";
 import { UpdateProduct } from "./UpdateProduct";
 import { useProductAdminContext } from "../../contexts/productAdminContext";
-import Splide from "@splidejs/splide";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -49,39 +50,6 @@ export const ProductDetails = () => {
   if (!product) {
     return null;
   }
-
-  const mainCarouselRef = useRef<HTMLDivElement | null>(null);
-  const thumbnailCarouselRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (mainCarouselRef.current && thumbnailCarouselRef.current) {
-      const main = new Splide(mainCarouselRef.current, {
-        type: "fade",
-        heightRatio: 0.5,
-        pagination: false,
-        arrows: false,
-        cover: true,
-      }).mount();
-
-      const thumbnails = new Splide(thumbnailCarouselRef.current, {
-        fixedWidth: 100,
-        fixedHeight: 64,
-        isNavigation: true,
-        gap: 10,
-        focus: "center",
-        pagination: false,
-        cover: true,
-        breakpoints: {
-          600: {
-            fixedWidth: 66,
-            fixedHeight: 40,
-          },
-        },
-      }).mount();
-
-      main.sync(thumbnails);
-    }
-  }, []);
 
   return (
     <div className="h-screen w-full flex flex-col">
@@ -181,30 +149,13 @@ export const ProductDetails = () => {
             </div>
           </div>
         </div>
-        <div className="w-full">
-          <div ref={mainCarouselRef} className="splide">
-            <div className="splide__track">
-              <ul className="splide__list">
-                {product.imgUrl.map((img, index) => (
-                  <li className="splide__slide" key={index}>
-                    <img src={img} alt={`img ${index}`} />
-                  </li>
-                ))}
-              </ul>
+        <Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
+          {product.imgUrl.map((img, index) => (
+            <div className="rounded-3xl border-none mx-2" key={index}>
+              <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
             </div>
-          </div>
-          <div ref={thumbnailCarouselRef} className="splide mt-4">
-            <div className="splide__track">
-              <ul className="splide__list">
-                {product.imgUrl.map((img, index) => (
-                  <li className="splide__slide" key={index}>
-                    <img src={img} alt={`thumb ${index}`} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
+          ))}
+        </Carousel>
       </div>
       {isOpenUpdateModal && recipeToEdit && (
         <UpdateProduct
