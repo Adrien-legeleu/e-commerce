@@ -22,7 +22,7 @@ export const Products: React.FC = () => {
   return (
     <div>
       <Filter products={products} setProducts={setProducts} />
-      <div className="h-full grid grid-cols-4  gap-10 px-8 items-center justify-center py-32">
+      <div className="h-full grid grid-cols-4  gap-0 px-8 items-center justify-center py-32">
         {products.map((product) => (
           <div
             key={`products id: ${product._id}`}

@@ -22,11 +22,11 @@ export const Products: React.FC = () => {
   return (
     <div>
       <Filter products={products} setProducts={setProducts} />
-      <div className="h-full grid grid-cols-4  gap-10 px-8 items-center justify-center py-32">
+      <div className="h-full grid grid-cols-4  gap-5 px-8 items-center justify-center py-32">
         {products.map((product) => (
           <div
             key={`products id: ${product._id}`}
-            className="rounded-3xl flex flex-col h-full justify-between gap-5 py-5  group hover:scale-105 duration-200"
+            className="rounded-3xl flex flex-col h-full justify-between gap-5 py-5 px-8 group hover:scale-105 duration-200"
           >
             <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
               <img

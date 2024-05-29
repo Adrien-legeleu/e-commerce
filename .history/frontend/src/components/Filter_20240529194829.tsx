@@ -1,31 +1,46 @@
-import React from "react";
-import { Select, Slider, Switch, Tag } from "antd";
+import { Select, SelectProps, Slider, Switch, Tag } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { filterColor } from "./FunctionFilter";
 import { IProduct } from "../types/product";
-
 interface IFilterProps {
   products: IProduct[];
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 }
 
 export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
-  const optionsColor = [
-    "blue",
-    "red",
-    "yellow",
-    "brown",
-    "white",
-    "black",
-    "green",
-    "gray",
-    "multicolor",
+  const optionsColor: SelectProps["options"] = [
+    { value: "blue" },
+    { value: "red" },
+    { value: "yellow" },
+    { value: "brown" },
+    { value: "white" },
+    { value: "black" },
+    { value: "green" },
+    { value: "gray" },
+    { value: "multicolor" },
+  ];
+  const optionsTypes: SelectProps["options"] = [
+    { value: "haut de survetement" },
+    { value: "bas de survetement" },
+    { value: "chaussures" },
+    { value: "couvre-chef" },
+    { value: "vetements haut" },
+    { value: "accessoires" },
+    { value: "vêtements bas" },
+  ];
+  const optionsSize: SelectProps["options"] = [
+    { value: "XS" },
+    { value: "S" },
+    { value: "M" },
+    { value: "L" },
+    { value: "XL" },
+    { value: "XXL" },
   ];
 
-  const optionsSize = ["XS", "S", "M", "L", "XL", "XXL"];
+  type TagRender = SelectProps["tagRender"];
 
-  const tagRender = (props: any) => {
-    const { value, closable, onClose } = props;
+  const tagRender: TagRender = (props) => {
+    const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
       event.stopPropagation();
@@ -47,7 +62,7 @@ export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
           border: value === "white" ? "1px solid #00000030" : "",
         }}
       >
-        {value}
+        {label}
       </Tag>
     );
   };
@@ -59,16 +74,21 @@ export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
         placeholder="Couleur"
         style={{ width: "100%" }}
         tagRender={tagRender}
-        options={optionsColor.map((color) => ({ value: color }))}
-        onChange={(value) => filterColor(value, products, setProducts)}
+        options={optionsColor}
+        onChange={() => filterColor(e.target.value, products)}
       />
       <Select
         mode="multiple"
         placeholder="Taille"
         style={{ width: "100%" }}
-        options={optionsSize.map((size) => ({ value: size }))}
+        options={optionsSize}
       />
-      {/* Ajoutez ici d'autres sélecteurs et éléments de filtre */}
+      <Select
+        mode="multiple"
+        placeholder="Type"
+        style={{ width: "100%" }}
+        options={optionsTypes}
+      />
       <Slider range step={1} defaultValue={[20, 50]} min={1} max={547} />
 
       <p>

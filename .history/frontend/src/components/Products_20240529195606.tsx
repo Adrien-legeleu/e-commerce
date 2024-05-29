@@ -26,7 +26,7 @@ export const Products: React.FC = () => {
         {products.map((product) => (
           <div
             key={`products id: ${product._id}`}
-            className="rounded-3xl flex flex-col h-full justify-between gap-5 py-5  group hover:scale-105 duration-200"
+            className="rounded-3xl flex flex-col h-full justify-between gap-5 py-5 px-8 group hover:scale-105 duration-200"
           >
             <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
               <img

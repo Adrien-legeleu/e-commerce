@@ -1,5 +1,5 @@
-import React from "react";
-import { Select, Slider, Switch, Tag } from "antd";
+import React from 'react';
+import { Select, SelectProps, Slider, Switch, Tag } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { filterColor } from "./FunctionFilter";
 import { IProduct } from "../types/product";
@@ -10,22 +10,20 @@ interface IFilterProps {
 }
 
 export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
-  const optionsColor = [
-    "blue",
-    "red",
-    "yellow",
-    "brown",
-    "white",
-    "black",
-    "green",
-    "gray",
-    "multicolor",
+  const optionsColor: SelectProps["options"] = [
+    { value: "blue", label: "Blue" },
+    { value: "red", label: "Red" },
+    { value: "yellow", label: "Yellow" },
+    { value: "brown", label: "Brown" },
+    { value: "white", label: "White" },
+    { value: "black", label: "Black" },
+    { value: "green", label: "Green" },
+    { value: "gray", label: "Gray" },
+    { value: "multicolor", label: "Multicolor" },
   ];
 
-  const optionsSize = ["XS", "S", "M", "L", "XL", "XXL"];
-
-  const tagRender = (props: any) => {
-    const { value, closable, onClose } = props;
+  const tagRender: SelectProps['tagRender'] = (props) => {
+    const { label, value, closable, onClose } = props;
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
       event.preventDefault();
       event.stopPropagation();
@@ -47,7 +45,7 @@ export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
           border: value === "white" ? "1px solid #00000030" : "",
         }}
       >
-        {value}
+        {label}
       </Tag>
     );
   };
@@ -59,16 +57,20 @@ export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
         placeholder="Couleur"
         style={{ width: "100%" }}
         tagRender={tagRender}
-        options={optionsColor.map((color) => ({ value: color }))}
+        options={optionsColor}
         onChange={(value) => filterColor(value, products, setProducts)}
       />
-      <Select
         mode="multiple"
         placeholder="Taille"
         style={{ width: "100%" }}
-        options={optionsSize.map((size) => ({ value: size }))}
+        options={optionsSize}
       />
-      {/* Ajoutez ici d'autres sélecteurs et éléments de filtre */}
+      <Select
+        mode="multiple"
+        placeholder="Type"
+        style={{ width: "100%" }}
+        options={optionsTypes}
+      />
       <Slider range step={1} defaultValue={[20, 50]} min={1} max={547} />
 
       <p>

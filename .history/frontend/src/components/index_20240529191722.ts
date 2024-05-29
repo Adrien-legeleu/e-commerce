@@ -1,4 +1,4 @@
 export * from "./Header";
 export * from "./Products";
 export * from "./Filter";
-export * from "./FunctionFilter";
+export * from "./functionFilter";
