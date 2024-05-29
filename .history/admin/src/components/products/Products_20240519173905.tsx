@@ -1,0 +1,31 @@
+import { useEffect, useState } from "react";
+import { api } from "../../config/api";
+import { IProduct } from '../../types/product';
+
+export const Products = () => {
+  const [products, setProducts] = useState(IProduct[]);
+
+  const getProducts = async () => {
+    try {
+      const response = await api.get("/products");
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  return (
+    <div>
+      {products.map((product, index) => {
+        return (
+          <div key={`product number : ${index}`}>
+            <h1>{product.title}</h1>
+          </div>
+        );
+      })}
+    </div>
+  );
+};

@@ -1,0 +1,47 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { api } from "../../config/api";
+import { IProduct } from "../../types/product";
+import { Header } from "../header";
+
+export const ProductDetails = () => {
+  const { productId } = useParams<{ productId: string }>();
+  const [product, setProduct] = useState<IProduct | null>(null);
+  console.log(productId);
+
+  const fetchProduct = async () => {
+    try {
+      const response = await api.get<IProduct>(`/products/${productId}`);
+      setProduct(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [productId]);
+
+  return (
+    <div className="h-screen w-full flex flex-col">
+      <Header />
+      <div className="flex flex-grow items-center justify-center bg-slate-500">
+        <div className="w-1/2 flex flex-col lg:flex-row bg-white p-4">
+          <div className="flex-grow p-4">
+            <h1>{product?.title}</h1>
+            <p>{product?.desc}</p>
+            <p>Price: {product?.price} €</p>
+            <p>Quantity: {product?.qte}</p>
+          </div>
+          <div className="flex-shrink-0 flex items-center justify-center bg-black h-full">
+            <img
+              src="https://www.couturierparisien.fr/579-large_default/chemise-homme-casual-blanche.jpg"
+              className="object-contain max-h-full max-w-full"
+              alt={product?.title}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
