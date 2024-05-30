@@ -1,18 +1,16 @@
 import React from "react";
 import { Select, Slider, Switch, Tag } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import { filterColor } from "./FunctionFilter";
+import { filterColor, filterSize } from "./FunctionFilter";
 import { IProduct } from "../types/product";
 
 interface IFilterProps {
-  products: IProduct[];
   productsFiltered: IProduct[];
   setProductsFiltered: React.Dispatch<React.SetStateAction<IProduct[]>>;
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 }
 
 export const Filter: React.FC<IFilterProps> = ({
-  products,
   productsFiltered,
   setProducts,
 }) => {
@@ -73,6 +71,7 @@ export const Filter: React.FC<IFilterProps> = ({
         placeholder="Taille"
         style={{ width: "100%" }}
         options={optionsSize.map((size) => ({ value: size }))}
+        onChange={(value) => filterSize(value, setProducts, productsFiltered)}
       />
       {/* Ajoutez ici d'autres sélecteurs et éléments de filtre */}
       <Slider range step={1} defaultValue={[20, 50]} min={1} max={547} />
