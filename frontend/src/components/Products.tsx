@@ -5,11 +5,13 @@ import { Filter } from "./Filter";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
+  const [productsFiltered, setProductsFiltered] = useState<IProduct[]>([]);
 
   const fetchProducts = async () => {
     try {
       const response = await api.get<IProduct[]>("/products");
       setProducts(response.data);
+      setProductsFiltered(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -21,7 +23,11 @@ export const Products: React.FC = () => {
 
   return (
     <div>
-      <Filter products={products} setProducts={setProducts} />
+      <Filter
+        setProducts={setProducts}
+        setProductsFiltered={setProductsFiltered}
+        productsFiltered={productsFiltered}
+      />
       <div className="h-full grid grid-cols-4  gap-10 px-8 items-center justify-center py-32">
         {products.map((product) => (
           <div

@@ -6,10 +6,16 @@ import { IProduct } from "../types/product";
 
 interface IFilterProps {
   products: IProduct[];
+  productsFiltered: IProduct[];
+  setProductsFiltered: React.Dispatch<React.SetStateAction<IProduct[]>>;
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 }
 
-export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
+export const Filter: React.FC<IFilterProps> = ({
+  products,
+  productsFiltered,
+  setProducts,
+}) => {
   const optionsColor = [
     "blue",
     "red",
@@ -60,7 +66,7 @@ export const Filter: React.FC<IFilterProps> = ({ products, setProducts }) => {
         style={{ width: "100%" }}
         tagRender={tagRender}
         options={optionsColor.map((color) => ({ value: color }))}
-        onChange={(value) => filterColor(value, products, setProducts)}
+        onChange={(value) => filterColor(value, setProducts, productsFiltered)}
       />
       <Select
         mode="multiple"
