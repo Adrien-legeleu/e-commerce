@@ -5,12 +5,6 @@ export const filterColor = (
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>,
   productsFiltered: IProduct[]
 ): void => {
-  // Si aucun filtre de couleur n'est sélectionné, retourner tous les produits
-  if (valueToFilter.length === 0) {
-    setProducts(productsFiltered);
-    return;
-  }
-
   // Créer un tableau pour les produits filtrés
   const filteredProducts: IProduct[] = [];
 
@@ -30,12 +24,6 @@ export const filterSize = (
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>,
   productsFiltered: IProduct[]
 ): void => {
-  // Si aucun filtre de couleur n'est sélectionné, retourner tous les produits
-  if (valueToFilter.length === 0) {
-    setProducts(productsFiltered);
-    return;
-  }
-
   // Créer un tableau pour les produits filtrés
   const filteredProducts: IProduct[] = [];
 
@@ -48,4 +36,38 @@ export const filterSize = (
 
   // Mettre à jour les produits filtrés
   setProducts(filteredProducts);
+};
+
+export const filterPrice = (
+  valueToFilter: number[],
+  setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>,
+  productsFiltered: IProduct[]
+) => {
+  const filteredProducts: IProduct[] = [];
+  productsFiltered.forEach((product) => {
+    if (
+      product.price >= valueToFilter[0] &&
+      product.price <= valueToFilter[1]
+    ) {
+      filteredProducts.push(product);
+    }
+  });
+  setProducts(filteredProducts);
+};
+export const filterDeliveryDate = (
+  valueToFilter: boolean,
+  setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>,
+  productsFiltered: IProduct[]
+) => {
+  if (valueToFilter) {
+    const filteredProducts: IProduct[] = [];
+    productsFiltered.forEach((product) => {
+      if (product.deliveryDate < 5) {
+        filteredProducts.push(product);
+      }
+    });
+    setProducts(filteredProducts);
+  } else {
+    setProducts(productsFiltered);
+  }
 };

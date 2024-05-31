@@ -28,7 +28,7 @@ export const Products: React.FC = () => {
         setProductsFiltered={setProductsFiltered}
         productsFiltered={productsFiltered}
       />
-      <div className="h-full grid grid-cols-4  gap-10 px-8 items-center justify-center py-32">
+      <div className="h-full grid grid-cols-4  gap-10 px-8 items-center justify-center py-20">
         {products.map((product) => (
           <div
             key={`products id: ${product._id}`}

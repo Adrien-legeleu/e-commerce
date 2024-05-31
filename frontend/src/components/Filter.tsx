@@ -1,7 +1,17 @@
-import React from "react";
-import { Select, Slider, Switch, Tag } from "antd";
-import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import { filterColor, filterSize } from "./FunctionFilter";
+import React, { useState } from "react";
+import { FloatButton, Select, Slider, Switch, Tag } from "antd";
+import {
+  CloseOutlined,
+  CheckOutlined,
+  CommentOutlined,
+  CustomerServiceOutlined,
+} from "@ant-design/icons";
+import {
+  filterColor,
+  filterDeliveryDate,
+  filterPrice,
+  filterSize,
+} from "./FunctionFilter";
 import { IProduct } from "../types/product";
 
 interface IFilterProps {
@@ -56,34 +66,79 @@ export const Filter: React.FC<IFilterProps> = ({
     );
   };
 
+  const [isOpenFilterCmponent, setIsOpenFilterComponent] = useState(false);
+
   return (
     <>
-      <Select
-        mode="multiple"
-        placeholder="Couleur"
-        style={{ width: "100%" }}
-        tagRender={tagRender}
-        options={optionsColor.map((color) => ({ value: color }))}
-        onChange={(value) => filterColor(value, setProducts, productsFiltered)}
-      />
-      <Select
-        mode="multiple"
-        placeholder="Taille"
-        style={{ width: "100%" }}
-        options={optionsSize.map((size) => ({ value: size }))}
-        onChange={(value) => filterSize(value, setProducts, productsFiltered)}
-      />
-      {/* Ajoutez ici d'autres sélecteurs et éléments de filtre */}
-      <Slider range step={1} defaultValue={[20, 50]} min={1} max={547} />
-
-      <p>
-        Livraison rapide :{" "}
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-          defaultChecked={false}
+      <div>
+        <FloatButton.Group
+          trigger="hover"
+          type="primary"
+          style={{ right: 24 }}
+          icon={<CustomerServiceOutlined />}
+        >
+          <FloatButton />
+          <FloatButton
+            icon={<CommentOutlined />}
+            onClick={() => setIsOpenFilterComponent(!isOpenFilterCmponent)}
+          />
+        </FloatButton.Group>
+      </div>
+      <div
+        className={`h-screen w-screen fixed top-0 left-0 z-40 ${
+          isOpenFilterCmponent ? "block" : "hidden"
+        }`}
+        onClick={() => setIsOpenFilterComponent(false)}
+      ></div>
+      <div
+        className={`px-8 w-1/4 items-center justify-center gap-8 fixed top-1/2 z-50 right-12 flex flex-col -translate-y-1/2 bg-white py-12 rounded-3xl shadow-2xl ${
+          isOpenFilterCmponent
+            ? " visible translate-x-0 opacity-100"
+            : "invisible opacity-0 translate-x-full"
+        } duration-200 `}
+      >
+        <Select
+          mode="multiple"
+          placeholder="Couleur"
+          style={{ width: "100%" }}
+          tagRender={tagRender}
+          options={optionsColor.map((color) => ({ value: color }))}
+          onChange={(value) =>
+            filterColor(value, setProducts, productsFiltered)
+          }
         />
-      </p>
+        <Select
+          mode="multiple"
+          placeholder="Taille"
+          style={{ width: "100%" }}
+          options={optionsSize.map((size) => ({ value: size }))}
+          onChange={(value) => filterSize(value, setProducts, productsFiltered)}
+        />
+        {/* Ajoutez ici d'autres sélecteurs et éléments de filtre */}
+        <Slider
+          range
+          step={1}
+          defaultValue={[0, 0]}
+          min={1}
+          max={547}
+          style={{ width: "100%" }}
+          onChange={(value) =>
+            filterPrice(value, setProducts, productsFiltered)
+          }
+        />
+
+        <p>
+          Livraison rapide :{" "}
+          <Switch
+            checkedChildren={<CheckOutlined />}
+            unCheckedChildren={<CloseOutlined />}
+            defaultChecked={false}
+            onChange={(value) =>
+              filterDeliveryDate(value, setProducts, productsFiltered)
+            }
+          />
+        </p>
+      </div>
     </>
   );
 };
