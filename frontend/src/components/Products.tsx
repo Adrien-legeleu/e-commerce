@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../config/api";
 import { IProduct } from "../types/product";
-import { Filter } from "./Filter";
+import { FilterComponent } from "./FilterComponent";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
@@ -23,7 +23,7 @@ export const Products: React.FC = () => {
 
   return (
     <div>
-      <Filter
+      <FilterComponent
         setProducts={setProducts}
         setProductsFiltered={setProductsFiltered}
         productsFiltered={productsFiltered}

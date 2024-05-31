@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { FloatButton, Select, Slider, Switch, Tag } from "antd";
-import {
-  CloseOutlined,
-  CheckOutlined,
-  CommentOutlined,
-  CustomerServiceOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
+import { Filter, ListFilter, SlidersHorizontal } from "lucide-react";
 import {
   filterColor,
   filterDeliveryDate,
@@ -13,6 +9,7 @@ import {
   filterSize,
 } from "./FunctionFilter";
 import { IProduct } from "../types/product";
+import { TriComponent } from "./TriComponent";
 
 interface IFilterProps {
   productsFiltered: IProduct[];
@@ -20,7 +17,7 @@ interface IFilterProps {
   setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>;
 }
 
-export const Filter: React.FC<IFilterProps> = ({
+export const FilterComponent: React.FC<IFilterProps> = ({
   productsFiltered,
   setProducts,
 }) => {
@@ -67,6 +64,7 @@ export const Filter: React.FC<IFilterProps> = ({
   };
 
   const [isOpenFilterCmponent, setIsOpenFilterComponent] = useState(false);
+  const [isOpenTriComponent, setIsOpenTriComponent] = useState(false);
 
   return (
     <>
@@ -74,21 +72,35 @@ export const Filter: React.FC<IFilterProps> = ({
         <FloatButton.Group
           trigger="hover"
           type="primary"
-          style={{ right: 24 }}
-          icon={<CustomerServiceOutlined />}
+          icon={<Filter className="w-full h-full" />}
         >
-          <FloatButton />
           <FloatButton
-            icon={<CommentOutlined />}
-            onClick={() => setIsOpenFilterComponent(!isOpenFilterCmponent)}
+            icon={<ListFilter className="w-full h-full" />}
+            onClick={() => {
+              setIsOpenTriComponent(!isOpenTriComponent);
+              setIsOpenFilterComponent(false);
+            }}
+          />{" "}
+          <FloatButton
+            icon={<SlidersHorizontal className="w-full h-full" />}
+            onClick={() => {
+              setIsOpenFilterComponent(!isOpenFilterCmponent);
+              setIsOpenTriComponent(false);
+            }}
           />
         </FloatButton.Group>
       </div>
+      <div>
+        <TriComponent isOpenTriComponent={isOpenTriComponent} />
+      </div>
       <div
         className={`h-screen w-screen fixed top-0 left-0 z-40 ${
-          isOpenFilterCmponent ? "block" : "hidden"
+          isOpenFilterCmponent || isOpenTriComponent ? "block" : "hidden"
         }`}
-        onClick={() => setIsOpenFilterComponent(false)}
+        onClick={() => {
+          setIsOpenFilterComponent(false);
+          setIsOpenTriComponent(false);
+        }}
       ></div>
       <div
         className={`px-8 w-1/4 items-center justify-center gap-8 fixed top-1/2 z-50 right-12 flex flex-col -translate-y-1/2 bg-white py-12 rounded-3xl shadow-2xl ${
