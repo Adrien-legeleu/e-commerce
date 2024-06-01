@@ -91,7 +91,11 @@ export const FilterComponent: React.FC<IFilterProps> = ({
         </FloatButton.Group>
       </div>
       <div>
-        <TriComponent isOpenTriComponent={isOpenTriComponent} />
+        <TriComponent
+          isOpenTriComponent={isOpenTriComponent}
+          productsFiltered={productsFiltered}
+          setProducts={setProducts}
+        />
       </div>
       <div
         className={`h-screen w-screen fixed top-0 left-0 z-40 ${

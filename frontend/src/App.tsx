@@ -1,11 +1,11 @@
-import { Header, Products } from "./components";
+import { BrowserRouter } from "react-router-dom";
+import { RouterApp } from "./Router/RouterApp";
 
 const App = () => {
   return (
-    <div>
-      <Header />
-      <Products />
-    </div>
+    <BrowserRouter>
+      <RouterApp />
+    </BrowserRouter>
   );
 };
 
