@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Child, Home, Men, Women } from "../Pages";
+import { Child, Favorites, Home, Men, Women } from "../Pages";
 
 export const RouterApp = () => {
   return (
@@ -8,6 +8,7 @@ export const RouterApp = () => {
       <Route path="/women" element={<Women />} />
       <Route path="/men" element={<Men />} />
       <Route path="/child" element={<Child />} />
+      <Route path="/favorites" element={<Favorites />} />
     </Routes>
   );
 };

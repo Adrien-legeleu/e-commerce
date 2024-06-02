@@ -1,6 +1,6 @@
 export interface IProduct {
   _id: string;
-  userId: string;
+  adminId: string;
   title: string;
   desc: string;
   price: number;
@@ -8,9 +8,11 @@ export interface IProduct {
   imgUrl: string[];
   color: string[];
   size: string[];
-  status: "in stock" | "out stock";
+  status: string;
+  sexe: string;
   deliveryDate: number;
+  favoris: number;
+  isFavoris: boolean;
   createdAt: Date;
   updatedAt: Date;
-  sexe: "Homme" | "Femme" | "Enfnat" | "Unisexe";
 }

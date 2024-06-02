@@ -13,7 +13,10 @@ export const Header = () => {
           <h1 className="text-2xl">E-commerce</h1>
         </Link>
       </div>
-      <div className="flex-1 flex items-center justify-end">
+      <div className="flex-1 flex gap-20 items-center justify-end">
+        <Link to="/favorites">
+          <button>favoris</button>
+        </Link>
         <button>Panier</button>
       </div>
     </div>
