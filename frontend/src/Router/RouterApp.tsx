@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Child, Favorites, Home, Men, Women } from "../Pages";
+import { Child, Favorites, Home, Men, ProductDetails, Women } from "../Pages";
 
 export const RouterApp = () => {
   return (
@@ -9,6 +9,7 @@ export const RouterApp = () => {
       <Route path="/men" element={<Men />} />
       <Route path="/child" element={<Child />} />
       <Route path="/favorites" element={<Favorites />} />
+      <Route path="/:productId" element={<ProductDetails />} />
     </Routes>
   );
 };
