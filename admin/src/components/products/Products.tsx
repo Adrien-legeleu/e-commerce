@@ -128,8 +128,6 @@ export const Products = () => {
                     </li>
                     <li>
                       sexe : <span>{product.sexe}</span>
-                      faoris : <span>{product.favoris}</span>
-                      isFavoris : <span>{product.isFavoris}</span>
                     </li>
                     {product.deliveryDate < 8 && (
                       <li className="flex items-center ">
