@@ -4,3 +4,4 @@ export * from "./Men";
 export * from "./Child";
 export * from "./Favorites";
 export * from "./ProductDetails";
+export * from "./Cart";

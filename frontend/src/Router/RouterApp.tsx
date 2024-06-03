@@ -1,5 +1,13 @@
 import { Route, Routes } from "react-router-dom";
-import { Child, Favorites, Home, Men, ProductDetails, Women } from "../Pages";
+import {
+  Cart,
+  Child,
+  Favorites,
+  Home,
+  Men,
+  ProductDetails,
+  Women,
+} from "../Pages";
 
 export const RouterApp = () => {
   return (
@@ -10,6 +18,7 @@ export const RouterApp = () => {
       <Route path="/child" element={<Child />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/:productId" element={<ProductDetails />} />
+      <Route path="/cart" element={<Cart />} />
     </Routes>
   );
 };

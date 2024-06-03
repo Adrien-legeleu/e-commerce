@@ -17,7 +17,9 @@ export const Header = () => {
         <Link to="/favorites">
           <button>favoris</button>
         </Link>
-        <button>Panier</button>
+        <Link to="/cart">
+          <button>Panier</button>
+        </Link>
       </div>
     </div>
   );
