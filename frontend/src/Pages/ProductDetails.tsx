@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -6,17 +6,56 @@ import { Carousel } from "react-responsive-carousel";
 import { IProduct } from "../types/product";
 import { api } from "../config/api";
 import { Header } from "../components";
+import { IProductCart } from "../types/productCart";
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<IProduct | null>(null);
+  const [dataProductCart, setDataProductCart] = useState<Partial<IProductCart>>(
+    {
+      title: undefined,
+      desc: undefined,
+      size: undefined,
+      color: undefined,
+      qte: undefined,
+      price: undefined,
+      deliveryDate: undefined,
+      imgUrl: undefined,
+      status: undefined,
+      sexe: undefined,
+      isFavoris: undefined,
+      favoris: undefined,
+      isToCart: false,
+    }
+  );
+  const [isToCart, setIsToCart] = useState(false);
+
+  const onChangeDataValue = ({ key, value }: any) => {
+    setDataProductCart((prev: any) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   const fetchProduct = async () => {
     try {
-      console.log(productId);
-
       const response = await api.get<IProduct>(`/products/${productId}`);
       setProduct(response.data);
+      setDataProductCart({
+        title: response.data?.title,
+        desc: response.data?.desc,
+        size: response.data?.size[0],
+        color: response.data?.color[0],
+        qte: response.data?.qte,
+        price: response.data?.price,
+        deliveryDate: response.data?.deliveryDate,
+        imgUrl: response.data?.imgUrl[0],
+        status: response.data?.status,
+        sexe: response.data?.sexe,
+        isFavoris: response.data?.isFavoris,
+        favoris: response.data?.favoris,
+        isToCart: false,
+      });
     } catch (error) {
       console.error(error);
       toast.error("Impossible de charger le produit.");
@@ -26,6 +65,15 @@ export const ProductDetails = () => {
   useEffect(() => {
     fetchProduct();
   }, [productId]);
+
+  const addToCart = async () => {
+    try {
+      setIsToCart(true);
+      await api.post(`/products/cart`, dataProductCart);
+    } catch (error) {
+      console.error("Error add product to cart :", error);
+    }
+  };
 
   if (!product) {
     return null;
@@ -59,7 +107,6 @@ export const ProductDetails = () => {
             <p className="text-2xl">{product.desc}</p>
           </div>
           <p className="text-red-700 text-xl">Prix : {product.price} €</p>
-          <p className="">Quantité : {product.qte}</p>
 
           <p>
             Sexe : <span> {product.sexe}</span>{" "}
@@ -70,35 +117,55 @@ export const ProductDetails = () => {
             <ul className="flex gap-3 mt-4">
               {product.color.map((color: string, index: number) => (
                 <li
-                  className={`w-8 h-6 rounded-full border-[1px] border-[#00000040]`}
+                  className={`w-8 h-6 rounded-full duration-200 cursor-pointer  ${
+                    dataProductCart?.color == color
+                      ? "border-[2px] border-[#00000085]"
+                      : "border-[1px] border-[#00000040]"
+                  }`}
                   key={index}
                   style={{ backgroundColor: color }}
-                ></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="capitalize">tailles disponibles :</p>
-            <ul className="flex gap-3 mt-4">
-              {product.size.map((size: string, index: number) => (
-                <li
-                  className={`w-10 h-7 rounded-full border-[1px] text-sm flex items-center justify-center border-[#00000040]`}
-                  key={index}
-                >
-                  {size}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
-          {product.imgUrl.map((img, index) => (
-            <div className="rounded-3xl border-none mx-2" key={index}>
-              <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
-            </div>
-          ))}
-        </Carousel>
-      </div>
-    </div>
-  );
+                  onClick={() =>
+                    onChangeDataValue({onClick={() =>
+  onChangeDataValue({ key: "color", value: color })
+}
+></li>
+))}
+</ul>
+</div>
+<div>
+<p className="capitalize">tailles disponibles :</p>
+<ul className="flex gap-3 mt-4">
+{product.size.map((size: string, index: number) => (
+<li
+  className={`w-10 h-7 rounded-full  text-sm flex items-center justify-center cursor-pointer ${
+    dataProductCart?.size == size
+      ? "border-[2px] border-[#00000085]"
+      : "border-[1px] border-[#00000040]"
+  }`}
+  key={index}
+  onClick={() =>
+    onChangeDataValue({ key: "size", value: size })
+  }
+>
+  {size}
+</li>
+))}
+</ul>
+</div>
+
+<div>
+<button onClick={addToCart}>Ajouter au panier</button>
+</div>
+</div>
+<Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
+{product.imgUrl.map((img, index) => (
+<div className="rounded-3xl border-none mx-2" key={index}>
+  <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
+</div>
+))}
+</Carousel>
+</div>
+</div>
+);
 };
+

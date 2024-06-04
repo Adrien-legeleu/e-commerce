@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { api } from "../config/api";
 import { IProduct } from "../types/product";
 import { FilterComponent } from "./FilterComponent";
-import { ListPlus } from "lucide-react";
 import lottie from "lottie-web";
 import { defineElement } from "@lordicon/element";
 import { Link } from "react-router-dom";
@@ -62,31 +61,6 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
     }
   };
 
-  const addToCart = async (productId: string, newStatus: boolean) => {
-    try {
-      await api.patch(`/products/cart/${productId}`, { addAction: newStatus });
-
-      setProducts((prevProducts) => {
-        return prevProducts.map((product) => {
-          if (product._id === productId) {
-            return { ...product, isAddToCart: newStatus };
-          }
-          return product;
-        });
-      });
-
-      setProductsFiltered((prevProduct) =>
-        prevProduct.map((product) =>
-          product._id === productId
-            ? { ...product, isAddToCart: newStatus }
-            : product
-        )
-      );
-    } catch (error) {
-      console.error("Error add product to cart :", error);
-    }
-  };
-
   return (
     <div>
       <FilterComponent
@@ -133,12 +107,6 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
                             style={{ width: "50px", height: "30px" }}
                           ></lord-icon>
                         )}
-                      </div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={() => addToCart(product._id, true)}
-                      >
-                        <ListPlus />
                       </div>
                     </div>
 
@@ -241,12 +209,6 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
                         style={{ width: "50px", height: "30px" }}
                       ></lord-icon>
                     )}
-                  </div>
-                  <div
-                    className="cursor-pointer"
-                    onClick={() => addToCart(product._id, true)}
-                  >
-                    <ListPlus />
                   </div>
                 </div>
 
