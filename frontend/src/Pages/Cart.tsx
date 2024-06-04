@@ -32,7 +32,7 @@ export const Cart = () => {
   return (
     <div>
       <Header />
-      <div className="grid grid-cols-60/40  justify-center h-screen pt-20 px-12">
+      <div className="grid grid-cols-60/40  justify-center h-screen pt-20 pl-12">
         <div>
           <h1 className="text-5xl text-center pb-12">Votre panier</h1>
           <div className="grid grid-cols-1 w-full gap-20 ">
@@ -73,7 +73,28 @@ export const Cart = () => {
             })}
           </div>
         </div>
-        <div>total</div>
+        <div className="w-full px-12">
+          <div className="bg-[#F9FAFB] py-8 px-5 rounded-3xl">
+            <h2 className="text-2xl">Résumé de la commande</h2>
+            <div className="flex gap-4 flex-col my-6">
+              <div className="flex justify-between  border-b-[1px] border-[#6b72801e] pb-5">
+                <h6 className="text-[#6b7280] text-lg">Total</h6>
+                <p className="font-semibold">89 $</p>
+              </div>
+              <div className="flex justify-between  border-b-[1px] border-[#6b72801e] pb-5">
+                <h6 className="text-[#6b7280] text-lg">Prix de la livraison</h6>
+                <p className="font-semibold">5,00 $</p>
+              </div>
+              <div className="flex justify-between   pb-5">
+                <h6 className="text-[#6b7280] text-lg">date de livraison</h6>
+                <p>24 mai 2024 - 12 juin 2024</p>
+              </div>
+            </div>
+            <button className="bg-[#4F46E5] py-4 text-center text-white w-full text-xl rounded-3xl">
+              Commander
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
