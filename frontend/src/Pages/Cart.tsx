@@ -66,21 +66,33 @@ export const Cart = () => {
     calculateDeliveryDate(products);
   }, [products]);
 
-  const changeQteToCart = async (value: number, productCartId: string) => {
+  const changeQteToCart = async (
+    value: number | null,
+    productCartId: string
+  ) => {
     try {
       await api.patch(`/products/cart/${productCartId}`, {
         qteToCart: value,
       });
 
-      setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product._id === productCartId
-            ? { ...product, qteToCart: value }
-            : product
-        )
-      );
+      if (value) {
+        setProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product._id === productCartId
+              ? { ...product, qteToCart: value }
+              : product
+          )
+        );
+      }
     } catch (error) {
       console.log("Error updating quantity: ", error);
+    }
+  };
+  const deleteProductcart = async (productCartId: string) => {
+    try {
+      await api.delete(`products/cart/${productCartId}`);
+    } catch (error) {
+      console.log("Error deleting productCart: ", error);
     }
   };
 
@@ -130,7 +142,10 @@ export const Cart = () => {
                     changeOnWheel
                     onChange={(value) => changeQteToCart(value, product._id)}
                   />
-                  <Trash2 />
+                  <Trash2
+                    className="cursor-pointer"
+                    onClick={() => deleteProductcart(product._id)}
+                  />
                 </div>
               </div>
             ))}
