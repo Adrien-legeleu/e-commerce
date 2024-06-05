@@ -24,3 +24,15 @@ export const filterNew = (
   );
   setProducts([...filteredProduct]);
 };
+
+export const filterPopularity = (
+  productFiltered: IProduct[],
+  setProducts: React.Dispatch<React.SetStateAction<IProduct[]>>
+): void => {
+  console.log(productFiltered);
+
+  const filteredProdcuct = productFiltered.sort(
+    (a: any, b: any) => b.favoris - a.favoris
+  );
+  setProducts([...filteredProdcuct]);
+};

@@ -45,14 +45,23 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product._id === productId
-            ? { ...product, isFavoris: newStatus }
+            ? {
+                ...product,
+                isFavoris: newStatus,
+                favoris: (product.favoris || 0) + 1,
+              }
             : product
         )
       );
+
       setProductsFiltered((prevProducts) =>
         prevProducts.map((product) =>
           product._id === productId
-            ? { ...product, isFavoris: newStatus }
+            ? {
+                ...product,
+                isFavoris: newStatus,
+                favoris: (product.favoris || 0) + 1,
+              }
             : product
         )
       );

@@ -58,6 +58,7 @@ export const ProductDetails = () => {
         isFavoris: response.data?.isFavoris,
         favoris: response.data?.favoris,
         isToCart: false,
+        productId: response.data?._id,
       });
     } catch (error) {
       console.error(error);
@@ -79,6 +80,7 @@ export const ProductDetails = () => {
   const addToCart = async () => {
     try {
       await api.post(`/products/cart`, dataProductCart);
+      toast.success("produit ajouté au panier");
     } catch (error) {
       console.error("Error add product to cart :", error);
     }
@@ -87,10 +89,6 @@ export const ProductDetails = () => {
   if (!product) {
     return null;
   }
-
-  const changeQteToCart = async (value: number, productCartId: string) => {
-    await api.patch(`/products/cart/${productCartId}`, value);
-  };
 
   return (
     <div className="h-full w-full flex flex-col pb-12">

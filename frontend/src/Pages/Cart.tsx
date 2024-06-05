@@ -4,6 +4,7 @@ import { api } from "../config/api";
 import { InputNumber } from "antd";
 import { Check, Trash2 } from "lucide-react";
 import { IProductCart } from "../types/productCart";
+import { Link } from "react-router-dom";
 
 export const Cart = () => {
   const [products, setProducts] = useState<IProductCart[]>([]);
@@ -88,8 +89,12 @@ export const Cart = () => {
       console.log("Error updating quantity: ", error);
     }
   };
+
   const deleteProductcart = async (productCartId: string) => {
     try {
+      setProducts((prevProducts) => {
+        return prevProducts.filter((product) => product._id !== productCartId);
+      });
       await api.delete(`products/cart/${productCartId}`);
     } catch (error) {
       console.log("Error deleting productCart: ", error);
@@ -108,32 +113,34 @@ export const Cart = () => {
                 key={`product-to-cart-number-${index}`}
                 className="grid-cols-60/40 grid m-auto border-t-[2px] pt-10 border-[#6b72801e]"
               >
-                <div className="flex">
-                  <div className="flex-1">
-                    <img
-                      src={product.imgUrl}
-                      className="rounded-3xl shadow-xl"
-                      alt={`img de ${product.title}`}
-                    />
-                  </div>
-                  <div className="flex-1 relative left-5 flex flex-col justify-between">
-                    <div className="space-y-1">
-                      <h1>{product.title}</h1>
-                      <div className="flex gap-5 text-[#6B7280]">
-                        <p>{product.color}</p>
-                        <p>{product.size}</p>
+                <Link to={`/${product.productId}`}>
+                  <div className="flex">
+                    <div className="flex-1">
+                      <img
+                        src={product.imgUrl}
+                        className="rounded-3xl shadow-xl"
+                        alt={`img de ${product.title}`}
+                      />
+                    </div>
+                    <div className="flex-1 relative left-5 flex flex-col justify-between">
+                      <div className="space-y-1">
+                        <h1>{product.title}</h1>
+                        <div className="flex gap-5 text-[#6B7280]">
+                          <p>{product.color}</p>
+                          <p>{product.size}</p>
+                        </div>
+                        <p className="font-semibold">${product.price}</p>
                       </div>
-                      <p className="font-semibold">${product.price}</p>
-                    </div>
-                    <div>
-                      <p className="flex gap-1">
-                        {" "}
-                        <Check color="#599400" />
-                        {product.status}
-                      </p>
+                      <div>
+                        <p className="flex gap-1">
+                          {" "}
+                          <Check color="#599400" />
+                          {product.status}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
                 <div className="flex justify-start gap-12 items-end">
                   <InputNumber
                     min={1}
@@ -161,7 +168,9 @@ export const Cart = () => {
               </div>
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
                 <h6 className="text-[#6b7280] text-lg">Prix de la livraison</h6>
-                <p className="font-semibold">5,00 $</p>
+                <p className="font-semibold">
+                  {products.length > 0 ? "5,00 $" : "0 $"}
+                </p>
               </div>
               <div className="flex justify-between pb-5 border-b-[1px] border-[#6b72801e]">
                 <h6 className="text-[#6b7280] text-lg">date de livraison</h6>

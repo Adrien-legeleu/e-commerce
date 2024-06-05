@@ -1,6 +1,16 @@
-import { Sparkles, ArrowUpWideNarrow, ArrowDownWideNarrow } from "lucide-react";
+import {
+  Sparkles,
+  ArrowUpWideNarrow,
+  ArrowDownWideNarrow,
+  Flame,
+} from "lucide-react";
 import { IProduct } from "../types/product";
-import { filterDecreasing, filterIncreasing, filterNew } from "./FunctionTri";
+import {
+  filterDecreasing,
+  filterIncreasing,
+  filterNew,
+  filterPopularity,
+} from "./FunctionTri";
 interface ITriProps {
   isOpenTriComponent: boolean;
   productsFiltered: IProduct[];
@@ -21,6 +31,13 @@ export const TriComponent: React.FC<ITriProps> = ({
       } duration-200 `}
     >
       <div className="flex flex-col gap-8">
+        <div
+          className="py-5 px-5 shadow-xl rounded-3xl flex items-center justify-center  gap-8 cursor-pointer"
+          onClick={() => filterPopularity(productsFiltered, setProducts)}
+        >
+          <Flame />
+          <span>Popularité</span>
+        </div>
         <div
           className="py-5 px-5 shadow-xl rounded-3xl flex items-center justify-center  gap-8 cursor-pointer"
           onClick={() => filterNew(productsFiltered, setProducts)}
