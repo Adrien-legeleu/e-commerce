@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -28,9 +28,11 @@ export const ProductDetails = () => {
       isToCart: false,
     }
   );
-  const [isToCart, setIsToCart] = useState(false);
+  const [triggerAddToCart, setTriggerAddToCart] = useState(false);
 
   const onChangeDataValue = ({ key, value }: any) => {
+    console.log(dataProductCart);
+
     setDataProductCart((prev: any) => ({
       ...prev,
       [key]: value,
@@ -47,6 +49,7 @@ export const ProductDetails = () => {
         size: response.data?.size[0],
         color: response.data?.color[0],
         qte: response.data?.qte,
+        qteToCart: 0,
         price: response.data?.price,
         deliveryDate: response.data?.deliveryDate,
         imgUrl: response.data?.imgUrl[0],
@@ -66,9 +69,15 @@ export const ProductDetails = () => {
     fetchProduct();
   }, [productId]);
 
+  useEffect(() => {
+    if (triggerAddToCart) {
+      addToCart();
+      setTriggerAddToCart(false);
+    }
+  }, [dataProductCart, triggerAddToCart]);
+
   const addToCart = async () => {
     try {
-      setIsToCart(true);
       await api.post(`/products/cart`, dataProductCart);
     } catch (error) {
       console.error("Error add product to cart :", error);
@@ -78,6 +87,10 @@ export const ProductDetails = () => {
   if (!product) {
     return null;
   }
+
+  const changeQteToCart = async (value: number, productCartId: string) => {
+    await api.patch(`/products/cart/${productCartId}`, value);
+  };
 
   return (
     <div className="h-full w-full flex flex-col pb-12">
@@ -125,47 +138,53 @@ export const ProductDetails = () => {
                   key={index}
                   style={{ backgroundColor: color }}
                   onClick={() =>
-                    onChangeDataValue({onClick={() =>
-  onChangeDataValue({ key: "color", value: color })
-}
-></li>
-))}
-</ul>
-</div>
-<div>
-<p className="capitalize">tailles disponibles :</p>
-<ul className="flex gap-3 mt-4">
-{product.size.map((size: string, index: number) => (
-<li
-  className={`w-10 h-7 rounded-full  text-sm flex items-center justify-center cursor-pointer ${
-    dataProductCart?.size == size
-      ? "border-[2px] border-[#00000085]"
-      : "border-[1px] border-[#00000040]"
-  }`}
-  key={index}
-  onClick={() =>
-    onChangeDataValue({ key: "size", value: size })
-  }
->
-  {size}
-</li>
-))}
-</ul>
-</div>
+                    onChangeDataValue({ key: "color", value: color })
+                  }
+                ></li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="capitalize">tailles disponibles :</p>
+            <ul className="flex gap-3 mt-4">
+              {product.size.map((size: string, index: number) => (
+                <li
+                  className={`w-10 h-7 rounded-full  text-sm flex items-center justify-center cursor-pointer ${
+                    dataProductCart?.size == size
+                      ? "border-[2px] border-[#00000085]"
+                      : "border-[1px] border-[#00000040]"
+                  }`}
+                  key={index}
+                  onClick={() =>
+                    onChangeDataValue({ key: "size", value: size })
+                  }
+                >
+                  {size}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-<div>
-<button onClick={addToCart}>Ajouter au panier</button>
-</div>
-</div>
-<Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
-{product.imgUrl.map((img, index) => (
-<div className="rounded-3xl border-none mx-2" key={index}>
-  <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
-</div>
-))}
-</Carousel>
-</div>
-</div>
-);
+          <div>
+            <button
+              onClick={() => {
+                onChangeDataValue({ key: "isToCart", value: true });
+                onChangeDataValue({ key: "qteToCart", value: 1 });
+                setTriggerAddToCart(true);
+              }}
+            >
+              Ajouter au panier
+            </button>
+          </div>
+        </div>
+        <Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
+          {product.imgUrl.map((img, index) => (
+            <div className="rounded-3xl border-none mx-2" key={index}>
+              <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
+            </div>
+          ))}
+        </Carousel>
+      </div>
+    </div>
+  );
 };
-

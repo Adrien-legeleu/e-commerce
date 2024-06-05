@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { Header } from "../components";
 import { api } from "../config/api";
 import { InputNumber } from "antd";
-import { Trash2 } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import { IProductCart } from "../types/productCart";
 
 export const Cart = () => {
   const [products, setProducts] = useState<IProductCart[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [minDeliveryDate, setMinDeliveryDate] = useState<Date | null>(null);
+  const [maxDeliveryDate, setMaxDeliveryDate] = useState<Date | null>(null);
 
   const getProducts = async () => {
     try {
       const response = await api.get<IProductCart[]>("products/cart");
-      console.log(response);
 
       const productsToAdd: IProductCart[] = response.data.filter(
         (product: any) => product.isToCart
@@ -20,7 +21,6 @@ export const Cart = () => {
 
       if (productsToAdd.length > 0) {
         setProducts(productsToAdd);
-        console.log(productsToAdd);
       }
     } catch (error) {
       console.log("error get products : " + error);
@@ -32,23 +32,57 @@ export const Cart = () => {
   }, []);
 
   const calculateTotalPrice = () => {
-    const total = products.reduce((total, product) => total + product.price, 0);
+    const total = products.reduce(
+      (total, product) => total + product.price * product.qteToCart,
+      0
+    );
     setTotalPrice(total);
   };
-  //   const calculateDeliveryDate = () => {
-  //     let minDate = products[0].deliveryDate;
-  //     let maxDate;
-  //     products.map((product) => {
-  //       if (product.deliveryDate < minDate) {
-  //         minDate += product.deliveryDate;
-  //         const data = new Date.getDate-new Date + 3
-  //       }
-  //     });
-  //   };
+
+  const calculateDeliveryDate = (products: IProductCart[]) => {
+    if (products.length === 0) return;
+
+    const deliveryDays = products.map(
+      (product: IProductCart) => product.deliveryDate
+    );
+
+    const minDays = Math.min(...deliveryDays);
+
+    const maxDays = Math.max(...deliveryDays);
+
+    const today = new Date();
+
+    const newMinDeliveryDate = new Date(today);
+    newMinDeliveryDate.setDate(today.getDate() + minDays);
+    setMinDeliveryDate(newMinDeliveryDate);
+
+    const newMaxDeliveryDate = new Date(today);
+    newMaxDeliveryDate.setDate(today.getDate() + maxDays);
+    setMaxDeliveryDate(newMaxDeliveryDate);
+  };
 
   useEffect(() => {
     calculateTotalPrice();
+    calculateDeliveryDate(products);
   }, [products]);
+
+  const changeQteToCart = async (value: number, productCartId: string) => {
+    try {
+      await api.patch(`/products/cart/${productCartId}`, {
+        qteToCart: value,
+      });
+
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product._id === productCartId
+            ? { ...product, qteToCart: value }
+            : product
+        )
+      );
+    } catch (error) {
+      console.log("Error updating quantity: ", error);
+    }
+  };
 
   return (
     <div>
@@ -65,8 +99,8 @@ export const Cart = () => {
                 <div className="flex">
                   <div className="flex-1">
                     <img
-                      src={product.imgUrl[0]}
-                      className="rounded-3xl"
+                      src={product.imgUrl}
+                      className="rounded-3xl shadow-xl"
                       alt={`img de ${product.title}`}
                     />
                   </div>
@@ -74,18 +108,28 @@ export const Cart = () => {
                     <div className="space-y-1">
                       <h1>{product.title}</h1>
                       <div className="flex gap-5 text-[#6B7280]">
-                        <p>{product.color[0]}</p>
-                        <p>{product.size[0]}</p>
+                        <p>{product.color}</p>
+                        <p>{product.size}</p>
                       </div>
                       <p className="font-semibold">${product.price}</p>
                     </div>
                     <div>
-                      <p>{product.status}</p>
+                      <p className="flex gap-1">
+                        {" "}
+                        <Check color="#599400" />
+                        {product.status}
+                      </p>
                     </div>
                   </div>
                 </div>
                 <div className="flex justify-start gap-12 items-end">
-                  <InputNumber min={1} max={product.qte} changeOnWheel />
+                  <InputNumber
+                    min={1}
+                    max={product.qte}
+                    defaultValue={product.qteToCart}
+                    changeOnWheel
+                    onChange={(value) => changeQteToCart(value, product._id)}
+                  />
                   <Trash2 />
                 </div>
               </div>
@@ -106,7 +150,15 @@ export const Cart = () => {
               </div>
               <div className="flex justify-between pb-5 border-b-[1px] border-[#6b72801e]">
                 <h6 className="text-[#6b7280] text-lg">date de livraison</h6>
-                <p>24 mai 2024 - 12 juin 2024</p>
+                <p>
+                  {minDeliveryDate
+                    ? minDeliveryDate.toLocaleDateString()
+                    : "N/A"}{" "}
+                  -{" "}
+                  {maxDeliveryDate
+                    ? maxDeliveryDate.toLocaleDateString()
+                    : "N/A"}
+                </p>
               </div>
               <div className="flex justify-between pb-5">
                 <h6 className=" text-xl font-semibold">Total de la commande</h6>
