@@ -14,6 +14,7 @@ export interface IProduct {
   favoris: number;
   isFavoris: boolean;
   typeClothe: string;
+  matter: string[];
   brand: string;
   createdAt: Date;
   updatedAt: Date;

@@ -19,14 +19,15 @@ export const CreateProduct: React.FC<CreateProps> = ({
         title,
         desc,
         price,
+        imgUrl,
         size,
         deliveryDate,
         color,
-        imgUrl,
         qte,
         sexe,
         typeClothe,
         brand,
+        matter,
       } = dataProduct;
 
       if (
@@ -40,7 +41,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
         !qte ||
         !sexe ||
         !typeClothe ||
-        !brand
+        !brand ||
+        !matter
       ) {
         throw new Error(
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
@@ -56,6 +58,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         qte,
         imgUrl,
         sexe,
+        matter,
       };
       const response = await api.post("/products", newProduct);
       onAddProduct(response?.data);
@@ -74,15 +77,16 @@ export const CreateProduct: React.FC<CreateProps> = ({
       params={{
         title: true,
         desc: true,
-        price: true,
-        deliveryDate: true,
         imgUrl: true,
+        qte: true,
         color: true,
         size: true,
-        qte: true,
         sexe: true,
         brand: true,
         typeClothe: true,
+        matter: true,
+        price: true,
+        deliveryDate: true,
       }}
       initialProductData={{
         title: "",
@@ -97,6 +101,7 @@ export const CreateProduct: React.FC<CreateProps> = ({
         sexe: undefined,
         brand: undefined,
         typeClothe: undefined,
+        matter: undefined,
       }}
     />
   );

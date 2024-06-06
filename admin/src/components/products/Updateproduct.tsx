@@ -29,6 +29,7 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         sexe,
         typeClothe,
         brand,
+        matter,
       } = dataProduct;
 
       if (
@@ -42,7 +43,8 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         !qte ||
         !sexe ||
         !typeClothe ||
-        !brand
+        !brand ||
+        !matter
       ) {
         throw new Error(
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
@@ -66,16 +68,16 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
       params={{
         title: true,
         desc: true,
-        price: true,
-        deliveryDate: true,
-        color: true,
         imgUrl: true,
         qte: true,
+        color: true,
         size: true,
-        status: true,
         sexe: true,
-        typeClothe: true,
         brand: true,
+        typeClothe: true,
+        matter: true,
+        price: true,
+        deliveryDate: true,
       }}
       initialProductData={{
         title: recipeToEdit?.title,
@@ -90,6 +92,7 @@ export const UpdateProduct: React.FC<UpdateProps> = ({
         sexe: recipeToEdit?.sexe,
         typeClothe: recipeToEdit?.typeClothe,
         brand: recipeToEdit?.brand,
+        matter: recipeToEdit?.matter,
       }}
     />
   );

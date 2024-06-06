@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Select } from "antd";
+import { InputNumber, Select, Slider } from "antd";
 import FileProduct from "./FileProduct";
 import type { UploadFile } from "antd/lib/upload/interface";
 import type { IProduct } from "../../types/product";
+import TextArea from "antd/es/input/TextArea";
 
 interface ModalProps {
   closeModal: () => void;
@@ -21,6 +22,7 @@ interface ModalProps {
     sexe: boolean;
     brand: boolean;
     typeClothe: boolean;
+    matter: boolean;
   };
   initialProductData?: Partial<IProduct>;
 }
@@ -72,6 +74,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
     sexe: initialProductData?.sexe || undefined,
     typeClothe: initialProductData?.typeClothe || undefined,
     brand: initialProductData?.brand || undefined,
+    matter: initialProductData?.matter || undefined,
   });
 
   const [images, setImages] = useState<string[]>(
@@ -107,7 +110,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
         className="fixed top-0 left-0 h-screen w-screen bg-[#00000060] backdrop-blur-sm"
         onClick={closeModal}
       ></div>
-      <div className="shadow-2xl bg-white w-3/4 z-10 pb-10 px-20 rounded-3xl space-y-10 relative">
+      <div className="shadow-2xl bg-white w-3/4 h-[90%] overflow-y-auto z-10 pb-10 px-20 rounded-3xl space-y-10 relative">
         <div
           className="absolute top-6 right-8 w-10 h-10 hover:scale-110 duration-300 cursor-pointer group"
           onClick={closeModal}
@@ -144,6 +147,67 @@ export const ModalProduct: React.FC<ModalProps> = ({
                   </div>
                 );
               }
+              if (key === "desc") {
+                return (
+                  <div key={key} className="row-span-2">
+                    <TextArea
+                      showCount
+                      maxLength={130}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      placeholder="description de votre produit"
+                      style={{ resize: "none", height: "100%" }}
+                    />
+                  </div>
+                );
+              }
+              if (key === "deliveryDate") {
+                return (
+                  <div key={key} className="row-span-2">
+                    <label>Date de livraison (en jour)</label>
+                    <Slider
+                      range
+                      step={1}
+                      defaultValue={[2, 5]}
+                      max={20}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                    />
+                  </div>
+                );
+              }
+              if (key === "price") {
+                return (
+                  <div key={key} className="row-span-2">
+                    <label>prix en euros</label>
+                    <Slider
+                      defaultValue={30}
+                      tooltip={{ open: true }}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                    />
+                  </div>
+                );
+              }
+              if (key === "qte") {
+                return (
+                  <div key={key}>
+                    <label>{fieldTitle}</label>
+                    <InputNumber
+                      changeOnWheel
+                      min={1}
+                      max={1000}
+                      defaultValue={5}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                    />
+                  </div>
+                );
+              }
               if (key === "sexe") {
                 return (
                   <div key={key}>
@@ -165,7 +229,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               if (key === "size") {
                 return (
                   <div key={key}>
-                    <label>{fieldTitle}</label>
+                    <label>Taille</label>
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -182,7 +246,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               if (key === "color") {
                 return (
                   <div key={key}>
-                    <label>{fieldTitle}</label>
+                    <label>Couleur</label>
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -198,7 +262,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "imgUrl") {
                 return (
-                  <div key={key} className="col-span-3">
+                  <div key={key} className="row-span-5">
                     <label>{fieldTitle}</label>
                     <FileProduct
                       handleProductImageUpload={handleProductImageUpload}
@@ -210,8 +274,8 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "typeClothe") {
                 return (
-                  <div key={key} className="col-span-3">
-                    <label>{fieldTitle}</label>
+                  <div key={key}>
+                    <label>Catégorie</label>
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -227,8 +291,8 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "brand") {
                 return (
-                  <div key={key} className="col-span-3">
-                    <label>{fieldTitle}</label>
+                  <div key={key}>
+                    <label>Marque</label>
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -238,6 +302,23 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       }
                       style={{ width: "100%" }}
                       options={brandOptions}
+                    />
+                  </div>
+                );
+              }
+              if (key === "matter") {
+                return (
+                  <div key={key}>
+                    <label>matière</label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select"
+                      value={valueData as string[] | undefined}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      style={{ width: "100%" }}
+                      options={materialOptions}
                     />
                   </div>
                 );
@@ -299,6 +380,41 @@ const typeClotheList = [
   { value: "costume" },
   { value: "sport" },
   { value: "accessoire" },
+];
+
+const materialOptions = [
+  {
+    label: <span>Vêtements</span>,
+    title: "Vêtements",
+    options: [
+      { label: <span>Coton</span>, value: "coton" },
+      { label: <span>Laine</span>, value: "laine" },
+      { label: <span>Soie</span>, value: "soie" },
+      { label: <span>Polyester</span>, value: "polyester" },
+      { label: <span>Cuir</span>, value: "cuir" },
+      { label: <span>Denim</span>, value: "denim" },
+      { label: <span>Lin</span>, value: "lin" },
+      { label: <span>Nylon</span>, value: "nylon" },
+      { label: <span>Viscose</span>, value: "viscose" },
+      { label: <span>Spandex</span>, value: "spandex" },
+    ],
+  },
+  {
+    label: <span>Accessoires</span>,
+    title: "Accessoires",
+    options: [
+      { label: <span>Acier</span>, value: "acier" },
+      { label: <span>Or</span>, value: "or" },
+      { label: <span>Argent</span>, value: "argent" },
+      { label: <span>Plastique</span>, value: "plastique" },
+      { label: <span>Bois</span>, value: "bois" },
+      { label: <span>Verre</span>, value: "verre" },
+      { label: <span>Cuivre</span>, value: "cuivre" },
+      { label: <span>Titane</span>, value: "titane" },
+      { label: <span>Laiton</span>, value: "laiton" },
+      { label: <span>Caoutchouc</span>, value: "caoutchouc" },
+    ],
+  },
 ];
 
 const brandOptions = [
