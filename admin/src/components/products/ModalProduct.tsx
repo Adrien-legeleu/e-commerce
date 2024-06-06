@@ -19,6 +19,8 @@ interface ModalProps {
     color: boolean;
     status?: boolean;
     sexe: boolean;
+    brand: boolean;
+    typeClothe: boolean;
   };
   initialProductData?: Partial<IProduct>;
 }
@@ -68,6 +70,8 @@ export const ModalProduct: React.FC<ModalProps> = ({
     imgUrl: initialProductData?.imgUrl || [],
     status: initialProductData?.status || "in stock",
     sexe: initialProductData?.sexe || undefined,
+    typeClothe: initialProductData?.typeClothe || undefined,
+    brand: initialProductData?.brand || undefined,
   });
 
   const [images, setImages] = useState<string[]>(
@@ -204,6 +208,40 @@ export const ModalProduct: React.FC<ModalProps> = ({
                   </div>
                 );
               }
+              if (key === "typeClothe") {
+                return (
+                  <div key={key} className="col-span-3">
+                    <label>{fieldTitle}</label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select"
+                      value={valueData as string[] | undefined}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      style={{ width: "100%" }}
+                      options={typeClotheList}
+                    />
+                  </div>
+                );
+              }
+              if (key === "brand") {
+                return (
+                  <div key={key} className="col-span-3">
+                    <label>{fieldTitle}</label>
+                    <Select
+                      mode="multiple"
+                      placeholder="Please select"
+                      value={valueData as string[] | undefined}
+                      onChange={(value) =>
+                        changeProductValue(key as keyof IProduct, value)
+                      }
+                      style={{ width: "100%" }}
+                      options={brandOptions}
+                    />
+                  </div>
+                );
+              }
               return (
                 <div key={key}>
                   <div className="relative h-11 w-full min-w-[200px]">
@@ -249,3 +287,193 @@ export const ModalProduct: React.FC<ModalProps> = ({
     </div>
   );
 };
+
+const typeClotheList = [
+  { value: "chaussure" },
+  { value: "pantalon" },
+  { value: "t-shirt" },
+  { value: "veste" },
+  { value: "robe" },
+  { value: "sous-vetement" },
+  { value: "pull" },
+  { value: "costume" },
+  { value: "sport" },
+  { value: "accessoire" },
+];
+
+const brandOptions = [
+  { value: "7 For All Mankind" },
+  { value: "A.P.C." },
+  { value: "Abercrombie & Fitch" },
+  { value: "Acne Studios" },
+  { value: "Adidas" },
+  { value: "Aeropostale" },
+  { value: "AG Jeans" },
+  { value: "Aldo" },
+  { value: "Alexander McQueen" },
+  { value: "Alo Yoga" },
+  { value: "American Eagle" },
+  { value: "Arc'teryx" },
+  { value: "Asics" },
+  { value: "Athleta" },
+  { value: "Bape" },
+  { value: "Balenciaga" },
+  { value: "Balmain" },
+  { value: "Banana Republic" },
+  { value: "Berluti" },
+  { value: "Birkenstock" },
+  { value: "Boden" },
+  { value: "Boglioli" },
+  { value: "Bottega Veneta" },
+  { value: "Brooks" },
+  { value: "Brioni" },
+  { value: "Burberry" },
+  { value: "Calvin Klein" },
+  { value: "Canada Goose" },
+  { value: "Canali" },
+  { value: "Carhartt" },
+  { value: "Celine" },
+  { value: "Chanel" },
+  { value: "Chloe" },
+  { value: "Christian Louboutin" },
+  { value: "Citizens of Humanity" },
+  { value: "Clarks" },
+  { value: "Coach" },
+  { value: "Columbia" },
+  { value: "Comme des Garçons" },
+  { value: "Common Projects" },
+  { value: "Converse" },
+  { value: "Corneliani" },
+  { value: "COS" },
+  { value: "Crocs" },
+  { value: "Diane von Fürstenberg" },
+  { value: "Dickies" },
+  { value: "Diesel" },
+  { value: "Dior" },
+  { value: "Dolce & Gabbana" },
+  { value: "Dr. Martens" },
+  { value: "Dries Van Noten" },
+  { value: "Evisu" },
+  { value: "Everlane" },
+  { value: "Equipment" },
+  { value: "Ermenegildo Zegna" },
+  { value: "Escada" },
+  { value: "Etro" },
+  { value: "Fabletics" },
+  { value: "Fendi" },
+  { value: "Fear of God" },
+  { value: "Frame" },
+  { value: "G-Star Raw" },
+  { value: "Gap" },
+  { value: "Golden Goose" },
+  { value: "Gucci" },
+  { value: "Guess" },
+  { value: "Gymshark" },
+  { value: "H&M" },
+  { value: "Helmut Lang" },
+  { value: "Hermès" },
+  { value: "Hobbs" },
+  { value: "Hollister" },
+  { value: "Hoka One One" },
+  { value: "Hugo Boss" },
+  { value: "Isabel Marant" },
+  { value: "Isaia" },
+  { value: "J Brand" },
+  { value: "J.Crew" },
+  { value: "Jil Sander" },
+  { value: "Jimmy Choo" },
+  { value: "Jordache" },
+  { value: "JW Anderson" },
+  { value: "Karen Millen" },
+  { value: "Kate Spade" },
+  { value: "Kenneth Cole" },
+  { value: "Kenzo" },
+  { value: "Kith" },
+  { value: "Kiton" },
+  { value: "Lacoste" },
+  { value: "Lee" },
+  { value: "Levi's" },
+  { value: "Lorna Jane" },
+  { value: "Loro Piana" },
+  { value: "Louis Vuitton" },
+  { value: "Lucky Brand" },
+  { value: "Lululemon" },
+  { value: "LVMH" },
+  { value: "Maje" },
+  { value: "Manolo Blahnik" },
+  { value: "Marc Jacobs" },
+  { value: "Massimo Dutti" },
+  { value: "Max Mara" },
+  { value: "Mavi Jeans" },
+  { value: "Michael Kors" },
+  { value: "Missoni" },
+  { value: "Moncler" },
+  { value: "Monsoon" },
+  { value: "Moschino" },
+  { value: "Mother" },
+  { value: "Muji" },
+  { value: "Nudie Jeans" },
+  { value: "New Balance" },
+  { value: "Nike" },
+  { value: "Nine West" },
+  { value: "Off-White" },
+  { value: "Old Navy" },
+  { value: "Oysho" },
+  { value: "Paige" },
+  { value: "Palace" },
+  { value: "Patagonia" },
+  { value: "Paul Smith" },
+  { value: "Pepe Jeans" },
+  { value: "Phase Eight" },
+  { value: "Puma" },
+  { value: "Prada" },
+  { value: "Proenza Schouler" },
+  { value: "Pull & Bear" },
+  { value: "Rag & Bone" },
+  { value: "Ralph Lauren" },
+  { value: "Reebok" },
+  { value: "Reiss" },
+  { value: "Rick Owens" },
+  { value: "Rodarte" },
+  { value: "Saint Laurent" },
+  { value: "Salomon" },
+  { value: "Sam Edelman" },
+  { value: "Sandro" },
+  { value: "Saucony" },
+  { value: "Scotch & Soda" },
+  { value: "Skechers" },
+  { value: "Spanx" },
+  { value: "Steve Madden" },
+  { value: "Stone Island" },
+  { value: "Stradivarius" },
+  { value: "Stuart Weitzman" },
+  { value: "Stüssy" },
+  { value: "Superdry" },
+  { value: "Sweaty Betty" },
+  { value: "Ted Baker" },
+  { value: "Theory" },
+  { value: "The North Face" },
+  { value: "Thom Browne" },
+  { value: "Timberland" },
+  { value: "Toms" },
+  { value: "Tommy Hilfiger" },
+  { value: "Tory Burch" },
+  { value: "Tory Sport" },
+  { value: "True Religion" },
+  { value: "UGG" },
+  { value: "Under Armour" },
+  { value: "Uniqlo" },
+  { value: "Valentino" },
+  { value: "Vans" },
+  { value: "Versace" },
+  { value: "Vetements" },
+  { value: "Victoria's Secret" },
+  { value: "Vince" },
+  { value: "Vuori" },
+  { value: "Wrangler" },
+  { value: "Yeezy" },
+  { value: "Yohji Yamamoto" },
+  { value: "Zara" },
+  { value: "Zella" },
+  { value: "Zimmermann" },
+];

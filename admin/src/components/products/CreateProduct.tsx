@@ -25,6 +25,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
         imgUrl,
         qte,
         sexe,
+        typeClothe,
+        brand,
       } = dataProduct;
 
       if (
@@ -36,7 +38,9 @@ export const CreateProduct: React.FC<CreateProps> = ({
         !color ||
         !imgUrl ||
         !qte ||
-        !sexe
+        !sexe ||
+        !typeClothe ||
+        !brand
       ) {
         throw new Error(
           "Title, description, size, price, delivery date, color, image URL, and quantity are required."
@@ -77,6 +81,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
         size: true,
         qte: true,
         sexe: true,
+        brand: true,
+        typeClothe: true,
       }}
       initialProductData={{
         title: "",
@@ -89,6 +95,8 @@ export const CreateProduct: React.FC<CreateProps> = ({
         qte: undefined,
         status: undefined,
         sexe: undefined,
+        brand: undefined,
+        typeClothe: undefined,
       }}
     />
   );

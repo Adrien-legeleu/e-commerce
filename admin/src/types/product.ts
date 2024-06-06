@@ -13,6 +13,8 @@ export interface IProduct {
   deliveryDate: number;
   favoris: number;
   isFavoris: boolean;
+  typeClothe: string;
+  brand: string;
   createdAt: Date;
   updatedAt: Date;
 }
