@@ -86,10 +86,29 @@ export const ModalProduct: React.FC<ModalProps> = ({
       ...prev,
       [key]: value,
     }));
+    console.log(dataProduct);
   };
 
   const handleSaveProducts = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (
+      !dataProduct.title ||
+      !dataProduct.desc ||
+      !dataProduct.typeClothe ||
+      !dataProduct.brand ||
+      !dataProduct.size ||
+      !dataProduct.color ||
+      !dataProduct.qte ||
+      !dataProduct.imgUrl ||
+      !dataProduct.deliveryDate ||
+      !dataProduct.matter ||
+      !dataProduct.price ||
+      !dataProduct.sexe
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
     try {
       await onSaveProduct(dataProduct);
       closeModal();
@@ -110,7 +129,10 @@ export const ModalProduct: React.FC<ModalProps> = ({
         className="fixed top-0 left-0 h-screen w-screen bg-[#00000060] backdrop-blur-sm"
         onClick={closeModal}
       ></div>
-      <div className="shadow-2xl bg-white w-3/4 h-[90%] overflow-y-auto z-10 pb-10 px-20 rounded-3xl space-y-10 relative">
+      <div
+        className="shadow-2xl bg-white w-3/4 h-[90%] overflow-y-auto z-10 pb-10 px-8  rounded-3xl space-y-10 relative"
+        style={{ scrollbarWidth: "none" }}
+      >
         <div
           className="absolute top-6 right-8 w-10 h-10 hover:scale-110 duration-300 cursor-pointer group"
           onClick={closeModal}
@@ -149,12 +171,15 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "desc") {
                 return (
-                  <div key={key} className="row-span-2">
+                  <div key={key} className="row-span-2 flex flex-col gap-1">
                     <TextArea
                       showCount
-                      maxLength={130}
-                      onChange={(value) =>
-                        changeProductValue(key as keyof IProduct, value)
+                      maxLength={140}
+                      onChange={(e) =>
+                        changeProductValue(
+                          key as keyof IProduct,
+                          e.target.value
+                        )
                       }
                       placeholder="description de votre produit"
                       style={{ resize: "none", height: "100%" }}
@@ -164,13 +189,14 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "deliveryDate") {
                 return (
-                  <div key={key} className="row-span-2">
+                  <div key={key} className="row-span-2 flex flex-col gap-1">
                     <label>Date de livraison (en jour)</label>
                     <Slider
                       range
                       step={1}
                       defaultValue={[2, 5]}
                       max={20}
+                      min={1}
                       onChange={(value) =>
                         changeProductValue(key as keyof IProduct, value)
                       }
@@ -180,11 +206,13 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "price") {
                 return (
-                  <div key={key} className="row-span-2">
+                  <div key={key} className="row-span-2 flex flex-col gap-1">
                     <label>prix en euros</label>
-                    <Slider
-                      defaultValue={30}
-                      tooltip={{ open: true }}
+                    <InputNumber
+                      changeOnWheel
+                      min={1}
+                      max={100000}
+                      defaultValue={57}
                       onChange={(value) =>
                         changeProductValue(key as keyof IProduct, value)
                       }
@@ -194,7 +222,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "qte") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>{fieldTitle}</label>
                     <InputNumber
                       changeOnWheel
@@ -210,7 +238,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "sexe") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>{fieldTitle}</label>
                     <Select
                       showSearch
@@ -228,7 +256,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "size") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>Taille</label>
                     <Select
                       mode="multiple"
@@ -245,7 +273,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "color") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>Couleur</label>
                     <Select
                       mode="multiple"
@@ -262,8 +290,11 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "imgUrl") {
                 return (
-                  <div key={key} className="row-span-5">
-                    <label>{fieldTitle}</label>
+                  <div
+                    key={key}
+                    className="row-span-5 text-center border-2 border-dashed py-5 px-6 rounded-3xl flex flex-col gap-1"
+                  >
+                    <label className="inline-block mb-5">Vos images</label>
                     <FileProduct
                       handleProductImageUpload={handleProductImageUpload}
                       imgUrlKey={key as keyof IProduct}
@@ -274,10 +305,9 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "typeClothe") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>Catégorie</label>
                     <Select
-                      mode="multiple"
                       placeholder="Please select"
                       value={valueData as string[] | undefined}
                       onChange={(value) =>
@@ -291,10 +321,9 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "brand") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>Marque</label>
                     <Select
-                      mode="multiple"
                       placeholder="Please select"
                       value={valueData as string[] | undefined}
                       onChange={(value) =>
@@ -308,7 +337,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               if (key === "matter") {
                 return (
-                  <div key={key}>
+                  <div key={key} className="flex flex-col gap-1">
                     <label>matière</label>
                     <Select
                       mode="multiple"
@@ -325,7 +354,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
               }
               return (
                 <div key={key}>
-                  <div className="relative h-11 w-full min-w-[200px]">
+                  <div className="relative h-11 w-full min-w-[200px] flex flex-col gap-1">
                     <input
                       placeholder={fieldTitle}
                       type="text"

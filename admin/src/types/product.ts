@@ -10,7 +10,7 @@ export interface IProduct {
   size: string[];
   status: string;
   sexe: string;
-  deliveryDate: number;
+  deliveryDate: number[];
   favoris: number;
   isFavoris: boolean;
   typeClothe: string;

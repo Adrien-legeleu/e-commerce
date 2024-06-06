@@ -129,7 +129,8 @@ export const Products = () => {
                     <li>
                       sexe : <span>{product.sexe}</span>
                     </li>
-                    {product.deliveryDate < 8 && (
+                    {(product.deliveryDate[0] + product.deliveryDate[1]) / 2 <
+                      8 && (
                       <li className="flex items-center ">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

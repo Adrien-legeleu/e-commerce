@@ -52,12 +52,14 @@ export const CreateProduct: React.FC<CreateProps> = ({
         title,
         desc,
         price,
+        imgUrl,
         size,
         deliveryDate,
         color,
         qte,
-        imgUrl,
         sexe,
+        typeClothe,
+        brand,
         matter,
       };
       const response = await api.post("/products", newProduct);
