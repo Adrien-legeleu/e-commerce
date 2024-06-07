@@ -10,6 +10,8 @@ import { UpdateProduct } from "./UpdateProduct";
 import { useProductAdminContext } from "../../contexts/productAdminContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import { Collapse, CollapseProps } from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -50,12 +52,65 @@ export const ProductDetails = () => {
     return null;
   }
 
+  const calculateDeliveryDate = (daysToAdd) => {
+    const date = new Date();
+    date.setDate(date.getDate() + daysToAdd);
+    return date.toLocaleDateString(); // Format de la date locale
+  };
+
+  const getItems: (
+    matter: string[],
+    deliveryDate: number[],
+    desc: string
+  ) => CollapseProps["items"] = (matter, deliveryDate, desc) => [
+    {
+      key: "1",
+      label: "Matière et entretien",
+      children: (
+        <div className="px-5 text-sm">
+          <div className="flex flex-col gap-2 mb-5">
+            <p>
+              <strong>Composition :</strong>
+            </p>
+            <ul className="list-disc pl-5">
+              {matter.map((matter) => {
+                return <li>{matter}</li>;
+              })}
+            </ul>
+          </div>
+          <p>
+            <strong>Conseil d'entretiens : </strong> Lavage en machine à 30 °C ,
+            lavage textiles délicats
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "2",
+      label: "Livraison",
+      children: (
+        <div>
+          <p>
+            {" "}
+            {calculateDeliveryDate(deliveryDate[0])} -{" "}
+            {calculateDeliveryDate(deliveryDate[1])}
+          </p>
+        </div>
+      ),
+    },
+    {
+      key: "3",
+      label: "Description",
+      children: <p>{desc}</p>,
+    },
+  ];
+
   return (
     <div className="h-screen w-full flex flex-col">
       <Header />
-      <div className="flex flex-row-reverse w-3/5 m-auto relative">
-        <Link to="/">
-          <div className="bg-[#000000D0] -left-40 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full">
+      <div className="grid-cols-2 grid w-full  relative py-12 px-24 gap-20">
+        <div className="bg-[#000000D0] left-6 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full z-30">
+          <Link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.3em"
@@ -70,45 +125,69 @@ export const ProductDetails = () => {
                 />
               </g>
             </svg>
-          </div>
-        </Link>
-        <div className="space-y-6 w-full pl-64">
-          <div>
+          </Link>
+        </div>
+
+        <Carousel
+          autoPlay
+          interval={5000}
+          transitionTime={500}
+          infiniteLoop
+          className="h-screen w-full"
+        >
+          {product.imgUrl.map((img, index) => (
+            <div className="rounded-3xl border-none mx-2 " key={index}>
+              <img
+                className="rounded-2xl h-full aspect-[4/5] object-cover"
+                src={img}
+                alt={`thumb ${index}`}
+              />
+            </div>
+          ))}
+        </Carousel>
+
+        <div className="space-y-16 w-full ">
+          <div className="space-y-1">
             <h1 className="text-4xl capitalize">{product.title}</h1>
-            <p className="text-2xl">{product.desc}</p>
+            <h2 className="text-2xl">{product.brand}</h2>
+            <p className="text-red-700 text-2xl">{product.price} €</p>
           </div>
-          <p className="text-red-700 text-xl">Prix : {product.price} €</p>
-          <p className="">Quantité : {product.qte}</p>
 
-          <p>
-            Sexe : <span> {product.sexe}</span>{" "}
-          </p>
-
-          <div>
-            <p className="capitalize">couleurs disponibles :</p>
-            <ul className="flex gap-3 mt-4">
-              {product.color.map((color, index) => (
-                <li
-                  className={`w-8 h-6 rounded-full border-[1px] border-[#00000040]`}
-                  key={index}
-                  style={{ backgroundColor: color }}
-                ></li>
-              ))}
-            </ul>
+          <div className="space-y-8">
+            <div>
+              <p className="capitalize">couleurs disponibles :</p>
+              <ul className="flex gap-3 mt-4">
+                {product.color.map((color, index) => (
+                  <li
+                    className={`w-8 h-6 rounded-full border-[1px] border-[#00000040]`}
+                    key={index}
+                    style={{ backgroundColor: color }}
+                  ></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="capitalize">tailles disponibles :</p>
+              <ul className="flex gap-3 mt-4">
+                {product.size.map((size, index) => (
+                  <li
+                    className={`w-10 h-7 rounded-full border-[1px] text-sm flex items-center justify-center border-[#00000040]`}
+                    key={index}
+                  >
+                    {size}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div>
-            <p className="capitalize">tailles disponibles :</p>
-            <ul className="flex gap-3 mt-4">
-              {product.size.map((size, index) => (
-                <li
-                  className={`w-10 h-7 rounded-full border-[1px] text-sm flex items-center justify-center border-[#00000040]`}
-                  key={index}
-                >
-                  {size}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Collapse
+            bordered={false}
+            className="text-xl flex  flex-col bg-[#dbdbdb21]"
+            expandIcon={({ isActive }) => (
+              <CaretRightOutlined rotate={isActive ? 90 : 0} width={20} />
+            )}
+            items={getItems(product.matter, product.deliveryDate, product.desc)}
+          />
           <div className="pt-6 flex items-center justify-end gap-6">
             <div
               className="hover:scale-110 duration-150 cursor-pointer"
@@ -155,13 +234,6 @@ export const ProductDetails = () => {
             </Link>
           </div>
         </div>
-        <Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
-          {product.imgUrl.map((img, index) => (
-            <div className="rounded-3xl border-none mx-2" key={index}>
-              <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
-            </div>
-          ))}
-        </Carousel>
       </div>
       {isOpenUpdateModal && recipeToEdit && (
         <UpdateProduct
