@@ -175,6 +175,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
                     <TextArea
                       showCount
                       maxLength={140}
+                      value={valueData as string | number | undefined}
                       onChange={(e) =>
                         changeProductValue(
                           key as keyof IProduct,
@@ -194,7 +195,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
                     <Slider
                       range
                       step={1}
-                      defaultValue={[2, 5]}
+                      value={valueData as any}
                       max={20}
                       min={1}
                       onChange={(value) =>
@@ -212,7 +213,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       changeOnWheel
                       min={1}
                       max={100000}
-                      defaultValue={57}
+                      value={valueData as string | number | undefined}
                       onChange={(value) =>
                         changeProductValue(key as keyof IProduct, value)
                       }
@@ -228,7 +229,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
                       changeOnWheel
                       min={1}
                       max={1000}
-                      defaultValue={5}
+                      value={valueData as string | number | undefined}
                       onChange={(value) =>
                         changeProductValue(key as keyof IProduct, value)
                       }
@@ -330,6 +331,7 @@ export const ModalProduct: React.FC<ModalProps> = ({
                         changeProductValue(key as keyof IProduct, value)
                       }
                       style={{ width: "100%" }}
+                      showSearch
                       options={brandOptions}
                     />
                   </div>

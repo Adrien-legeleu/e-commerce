@@ -54,26 +54,26 @@ export const Products = () => {
 
       <div className="grid px-20 grid-cols-4 items-start justify-center gap-16">
         {products.map((product, index) => (
-          <div className="pb-4">
-            <Link to={`/${product._id}`}>
-              <div
-                className="hover:scale-105 cursor-pointer group duration-200"
-                key={`product-${index}`}
-              >
+          <div key={index} className="flex flex-col h-full  pb-4">
+            <Link
+              to={`/${product._id}`}
+              className="flex flex-col justify-end h-full "
+            >
+              <div className="hover:scale-105  cursor-pointer group duration-200">
                 <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
                   <img
-                    className="rounded-3xl w-full"
+                    className="rounded-3xl w-full object-cover aspect-[4/5]"
                     src={product.imgUrl[0]}
                     alt={`img: ${product.title}`}
                   />
-                  <div className="py-2 px-4 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full  translate-y-5 invisible  group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
-                    <ul className="flex gap-3 mt-4 whitespace-nowrap ">
-                      {product.color.map((color: any, index: any) => {
+                  <div className="py-2 px-4 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full translate-y-5 invisible group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
+                    <ul className="flex gap-3 mt-4 whitespace-nowrap">
+                      {product.color.map((color, index) => {
                         if (index < 3) {
                           return (
                             <li
-                              className={`min-w-9 min-h-6 rounded-full border-[1px] border-[#00000040]`}
-                              key={`color : ${index}  `}
+                              className="min-w-9 min-h-6 rounded-full border-[1px] border-[#00000040]"
+                              key={`color-${index}`}
                               style={{ backgroundColor: color }}
                             ></li>
                           );
@@ -81,8 +81,8 @@ export const Products = () => {
                         if (index === 4) {
                           return (
                             <li
-                              className={`min-w-8 min-h-6 rounded-full flex items-center justify-center text-[0.75rem] border-[1px] border-[#00000040]`}
-                              key={`couleurs restantes : ${index}  `}
+                              className="min-w-8 min-h-6 rounded-full flex items-center justify-center text-[0.75rem] border-[1px] border-[#00000040]"
+                              key={`colors-remaining-${index}`}
                             >
                               + {product.color.length - 3}
                             </li>
@@ -90,13 +90,13 @@ export const Products = () => {
                         }
                       })}
                     </ul>
-                    <ul className="flex   gap-3 mt-4">
-                      {product.size.map((size: any, index: any) => {
+                    <ul className="flex gap-3 mt-4">
+                      {product.size.map((size, index) => {
                         if (index < 3) {
                           return (
                             <li
-                              className={`w-9 h-7 rounded-full border-[1px]  text-[0.75rem] flex items-center justify-center border-[#00000040]`}
-                              key={`taille : ${index}  `}
+                              className="w-9 h-7 rounded-full border-[1px] text-[0.75rem] flex items-center justify-center border-[#00000040]"
+                              key={`size-${index}`}
                             >
                               {size}
                             </li>
@@ -105,8 +105,8 @@ export const Products = () => {
                         if (index === 4) {
                           return (
                             <li
-                              className={`w-9 h-7 rounded-full border-[1px]  text-[0.75rem] flex items-center justify-center border-[#00000040]`}
-                              key={`taille : ${index}  `}
+                              className="w-9 h-7 rounded-full border-[1px] text-[0.75rem] flex items-center justify-center border-[#00000040]"
+                              key={`sizes-remaining-${index}`}
                             >
                               + {product.size.length - 3}
                             </li>
@@ -118,7 +118,7 @@ export const Products = () => {
                 </div>
                 <div className="mt-3">
                   <h4 className="text-center text">{product.title}</h4>
-                  <h5 className="text-center text-sm">{product.desc}</h5>
+                  <h5 className="text-center text-sm">{product.brand}</h5>
                   <ul className="mt-1">
                     <li className="text-red-600 text text-left">
                       {product.price} €
@@ -131,7 +131,7 @@ export const Products = () => {
                     </li>
                     {(product.deliveryDate[0] + product.deliveryDate[1]) / 2 <
                       8 && (
-                      <li className="flex items-center ">
+                      <li className="flex items-center">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1em"
@@ -149,7 +149,7 @@ export const Products = () => {
                             <path d="M19.5 17.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0m-10 0a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0" />
                             <path d="M14.5 17.5h-5M2 4h10c1.414 0 2.121 0 2.56.44C15 4.878 15 5.585 15 7v8.5m.5-9h1.801c.83 0 1.245 0 1.589.195c.344.194.557.55.984 1.262l1.699 2.83c.212.354.318.532.373.728c.054.197.054.403.054.816V15c0 .935 0 1.402-.201 1.75a1.5 1.5 0 0 1-.549.549c-.348.201-.815.201-1.75.201M2 13v2c0 .935 0 1.402.201 1.75a1.5 1.5 0 0 0 .549.549c.348.201.815.201 1.75.201M2 7h6m-6 3h4" />
                           </g>
-                        </svg>{" "}
+                        </svg>
                         livraison express
                       </li>
                     )}
@@ -180,9 +180,8 @@ export const Products = () => {
                   </g>
                 </svg>
               </div>
-
               <div
-                onClick={() => deleteProduct(product._id)} // Corrected function name
+                onClick={() => deleteProduct(product._id)}
                 className="hover:scale-110 duration-150 cursor-pointer"
               >
                 <svg
@@ -204,6 +203,7 @@ export const Products = () => {
           </div>
         ))}
       </div>
+
       {isOpenCreateModal && (
         <CreateProduct
           closeCreateModal={() => setIsOpenCreateModal(false)}
