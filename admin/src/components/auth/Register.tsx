@@ -1,7 +1,6 @@
 export const Register = () => {
   return (
-    <div className="bg-[#00000006] shadow-2xl rounded-full w-1/2 px-32 py-20 flex gap-20 flex-col">
-      <h1 className="text-4xl text-center ">Bienvenue </h1>
+    <div className="  w-1/4 pb-12 pt-8  flex gap-20 flex-col">
       <div className="space-y-4 w-full">
         <div className="relative h-11 w-full min-w-[200px]">
           <input

@@ -11,7 +11,7 @@ import { useProductAdminContext } from "../../contexts/productAdminContext";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { Collapse, CollapseProps } from "antd";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { ChevronRight } from "lucide-react";
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -52,7 +52,7 @@ export const ProductDetails = () => {
     return null;
   }
 
-  const calculateDeliveryDate = (daysToAdd) => {
+  const calculateDeliveryDate = (daysToAdd: any) => {
     const date = new Date();
     date.setDate(date.getDate() + daysToAdd);
     return date.toLocaleDateString(); // Format de la date locale
@@ -61,8 +61,20 @@ export const ProductDetails = () => {
   const getItems: (
     matter: string[],
     deliveryDate: number[],
-    desc: string
-  ) => CollapseProps["items"] = (matter, deliveryDate, desc) => [
+    desc: string,
+    sexe: string,
+    typeClothe: string,
+    favoris: number,
+    qte: number
+  ) => CollapseProps["items"] = (
+    matter,
+    deliveryDate,
+    desc,
+    sexe,
+    typeClothe,
+    favoris,
+    qte
+  ) => [
     {
       key: "1",
       label: "Matière et entretien",
@@ -70,7 +82,7 @@ export const ProductDetails = () => {
         <div className="px-5 text-sm">
           <div className="flex flex-col gap-2 mb-5">
             <p>
-              <strong>Composition :</strong>
+              <span className="font-semibold">Composition :</span>
             </p>
             <ul className="list-disc pl-5">
               {matter.map((matter) => {
@@ -79,8 +91,8 @@ export const ProductDetails = () => {
             </ul>
           </div>
           <p>
-            <strong>Conseil d'entretiens : </strong> Lavage en machine à 30 °C ,
-            lavage textiles délicats
+            <span className="font-semibold">Conseil d'entretiens : </span>{" "}
+            Lavage en machine à 30 °C , lavage textiles délicats
           </p>
         </div>
       ),
@@ -89,11 +101,14 @@ export const ProductDetails = () => {
       key: "2",
       label: "Livraison",
       children: (
-        <div>
+        <div className="text-sm px-5 ">
           <p>
-            {" "}
-            {calculateDeliveryDate(deliveryDate[0])} -{" "}
-            {calculateDeliveryDate(deliveryDate[1])}
+            <span className="font-semibold">Livraison estimé entre : </span>
+            <span>
+              {" "}
+              {calculateDeliveryDate(deliveryDate[0])} -{" "}
+              {calculateDeliveryDate(deliveryDate[1])}
+            </span>
           </p>
         </div>
       ),
@@ -101,7 +116,19 @@ export const ProductDetails = () => {
     {
       key: "3",
       label: "Description",
-      children: <p>{desc}</p>,
+      children: <p className="text-sm px-5">{desc}</p>,
+    },
+    {
+      key: "4",
+      label: "Plus de Détails",
+      children: (
+        <ul className="text-sm list-disc px-5 capitalize">
+          <li>sexe : {sexe}</li>
+          <li>catégorie : {typeClothe}</li>
+          <li>En favoris : {favoris}</li>
+          <li>quantité : {qte}</li>
+        </ul>
+      ),
     },
   ];
 
@@ -146,7 +173,7 @@ export const ProductDetails = () => {
           ))}
         </Carousel>
 
-        <div className="space-y-16 w-full ">
+        <div className="space-y-6  w-full ">
           <div className="space-y-1">
             <h1 className="text-4xl capitalize">{product.title}</h1>
             <h2 className="text-2xl">{product.brand}</h2>
@@ -182,11 +209,20 @@ export const ProductDetails = () => {
           </div>
           <Collapse
             bordered={false}
-            className="text-xl flex  flex-col bg-[#dbdbdb21]"
+            size="large"
+            className=" flex   flex-col bg-[#dbdbdb21]"
             expandIcon={({ isActive }) => (
-              <CaretRightOutlined rotate={isActive ? 90 : 0} width={20} />
+              <ChevronRight rotate={isActive ? 90 : 0} width={20} />
             )}
-            items={getItems(product.matter, product.deliveryDate, product.desc)}
+            items={getItems(
+              product.matter,
+              product.deliveryDate,
+              product.desc,
+              product.sexe,
+              product.typeClothe,
+              product.favoris,
+              product.qte
+            )}
           />
           <div className="pt-6 flex items-center justify-end gap-6">
             <div
