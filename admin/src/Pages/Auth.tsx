@@ -5,7 +5,8 @@ import {
 } from "../contexts/userContext";
 import { useState } from "react";
 import { Login, Register } from "../components/auth";
-import { AuroraBackground } from "../components/design/auroraBg";
+import { AuroraBackground } from "../components/design/AuroraBg";
+import LetterPullup from "../components/design/LetterPullup";
 
 export const Auth = () => {
   const { onLogin, onRegister } = useAdminContext();
@@ -40,21 +41,21 @@ export const Auth = () => {
           className="w-full h-full items-center justify-center flex flex-col pt-12"
           onSubmit={onSubmit}
         >
-          <h1 className="text-5xl  font-semibold text-center ">
-            Bienvenue dans
-            <br /> votre e-commerce{" "}
-          </h1>
+          <LetterPullup
+            words="Bienvenue dans votre e-commerce"
+            className="text-5xl font-semibold text-center"
+          />
           {isLogin ? <Login /> : <Register />}
-          <div className="flex flex-col items-center justify-center gap-10">
+          <div className="flex flex-col items-center justify-center gap-6">
             <button
               type="submit"
-              className="py-4 px-5 bg-[#000000] text-white shadow-2xl rounded-full shadow-back hover:scale-110 duration-300 ease-in-out z-10"
+              className="py-4 px-5 bg-[#000000] text-sm text-white shadow-2xl rounded-full shadow-back hover:scale-110 duration-300 ease-in-out z-10"
             >
               Connectez-vous
             </button>
             <div
               onClick={changeAuthMode}
-              className="cursor-pointer hover:scale-105 duration-300 ease-in-out z-10"
+              className="cursor-pointer hover:scale-105 duration-300 ease-in-out z-10 text-sm"
             >
               {isLogin ? (
                 <p>Pas de compte ? Créer votre compte !</p>

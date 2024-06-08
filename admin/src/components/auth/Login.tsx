@@ -1,6 +1,6 @@
 export const Login = () => {
   return (
-    <div className="  w-1/4 pb-12 pt-8  flex gap-20 flex-col">
+    <div className="  w-1/4 pb-16 pt-10  flex gap-20 flex-col">
       <div className="space-y-4 w-full">
         <div className="relative h-11 w-full min-w-[200px]">
           <input
