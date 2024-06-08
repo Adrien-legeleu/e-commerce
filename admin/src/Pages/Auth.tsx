@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Login, Register } from "../components/auth";
 import { AuroraBackground } from "../components/design/AuroraBg";
 import LetterPullup from "../components/design/LetterPullup";
+import BoxReveal from "../components/design/BoxReveal";
+import ShimmerButton from "../components/design/ShimmerButton";
 
 export const Auth = () => {
   const { onLogin, onRegister } = useAdminContext();
@@ -47,21 +49,28 @@ export const Auth = () => {
           />
           {isLogin ? <Login /> : <Register />}
           <div className="flex flex-col items-center justify-center gap-6">
-            <button
+            {" "}
+            <ShimmerButton
               type="submit"
-              className="py-4 px-5 bg-[#000000] text-sm text-white shadow-2xl rounded-full shadow-back hover:scale-110 duration-300 ease-in-out z-10"
+              className=" hover:scale-110 duration-300 ease-in-out z-10"
             >
-              Connectez-vous
-            </button>
+              <BoxReveal>
+                <button className=" bg-[#000000] text-sm text-white shadow-2xl rounded-full shadow-back  z-10">
+                  Connectez-vous
+                </button>
+              </BoxReveal>
+            </ShimmerButton>
             <div
               onClick={changeAuthMode}
               className="cursor-pointer hover:scale-105 duration-300 ease-in-out z-10 text-sm"
             >
-              {isLogin ? (
-                <p>Pas de compte ? Créer votre compte !</p>
-              ) : (
-                <p>Vous avez déjà un compte ? connectez-vous !</p>
-              )}
+              <BoxReveal>
+                {isLogin ? (
+                  <p>Pas de compte ? Créer votre compte !</p>
+                ) : (
+                  <p>Vous avez déjà un compte ? connectez-vous !</p>
+                )}
+              </BoxReveal>
             </div>
           </div>
         </form>

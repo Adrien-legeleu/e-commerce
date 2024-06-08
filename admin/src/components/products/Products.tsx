@@ -52,21 +52,30 @@ export const Products = () => {
         </button>
       </div>
 
-      <div className="grid px-20 grid-cols-4 items-start justify-center gap-16">
+      <div className="grid px-10 grid-cols-4 items-start justify-center gap-8">
         {products.map((product, index) => (
           <div key={index} className="flex flex-col h-full  pb-4">
             <Link
               to={`/${product._id}`}
               className="flex flex-col justify-end h-full "
             >
-              <div className="hover:scale-105  cursor-pointer group duration-200">
-                <div className="relative group group-hover:shadow-2xl duration-200 rounded-3xl">
+              <div className="hover:scale-105 bg-[#F9FAFB] w-full border-[#a1a1a159] border-[1px] space-y-5  p-5 rounded-2xl cursor-pointer group duration-200">
+                <div>
+                  <h3 className="text-left text-lg font-semibold text-blackGray">
+                    {product.title}
+                  </h3>
+                  <h4 className="text-left text-sm text-gray">
+                    {product.brand}
+                  </h4>
+                </div>
+
+                <div className="relative group group-hover:shadow-2xl duration-200 rounded-2xl">
                   <img
-                    className="rounded-3xl w-full object-cover aspect-[4/5]"
+                    className="rounded-2xl w-full object-cover aspect-[7/8]"
                     src={product.imgUrl[0]}
                     alt={`img: ${product.title}`}
                   />
-                  <div className="py-2 px-4 bg-[#FFFFFFC9] rounded-3xl absolute bottom-0 left-0 w-full translate-y-5 invisible group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
+                  <div className="py-2 px-4 bg-[#FFFFFFC9] rounded-2xl absolute bottom-0 left-0 w-full translate-y-5 invisible group-hover:translate-y-0 group-hover:visible group-hover:opacity-100 opacity-0 duration-300">
                     <ul className="flex gap-3 mt-4 whitespace-nowrap">
                       {product.color.map((color, index) => {
                         if (index < 3) {
@@ -116,22 +125,14 @@ export const Products = () => {
                     </ul>
                   </div>
                 </div>
-                <div className="mt-3">
-                  <h4 className="text-center text">{product.title}</h4>
-                  <h5 className="text-center text-sm">{product.brand}</h5>
-                  <ul className="mt-1">
-                    <li className="text-red-600 text text-left">
+                <div>
+                  <ul className="flex justify-between">
+                    <li className="text-blackGray font-semibold text-2xl text-left ">
                       {product.price} €
-                    </li>
-                    <li>
-                      en stock : <strong>{product.qte}</strong>
-                    </li>
-                    <li>
-                      sexe : <span>{product.sexe}</span>
                     </li>
                     {(product.deliveryDate[0] + product.deliveryDate[1]) / 2 <
                       8 && (
-                      <li className="flex items-center">
+                      <li className="flex items-center space-x-1">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1em"
@@ -150,7 +151,7 @@ export const Products = () => {
                             <path d="M14.5 17.5h-5M2 4h10c1.414 0 2.121 0 2.56.44C15 4.878 15 5.585 15 7v8.5m.5-9h1.801c.83 0 1.245 0 1.589.195c.344.194.557.55.984 1.262l1.699 2.83c.212.354.318.532.373.728c.054.197.054.403.054.816V15c0 .935 0 1.402-.201 1.75a1.5 1.5 0 0 1-.549.549c-.348.201-.815.201-1.75.201M2 13v2c0 .935 0 1.402.201 1.75a1.5 1.5 0 0 0 .549.549c.348.201.815.201 1.75.201M2 7h6m-6 3h4" />
                           </g>
                         </svg>
-                        livraison express
+                        <p>Express</p>
                       </li>
                     )}
                   </ul>
