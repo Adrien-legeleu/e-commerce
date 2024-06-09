@@ -11,11 +11,13 @@ module.exports = {
       colors: {
         blackGray: "#525252",
         gray: "#989999",
+        grayLight: "#F3F4F6",
       },
       animation: {
         aurora: "aurora 60s linear infinite",
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
+        shimmer: "shimmer 8s infinite",
       },
       keyframes: {
         aurora: {
@@ -24,6 +26,14 @@ module.exports = {
           },
           to: {
             backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
+        shimmer: {
+          "0%, 90%, 100%": {
+            "background-position": "calc(-100% - var(--shimmer-width)) 0",
+          },
+          "30%, 60%": {
+            "background-position": "calc(100% + var(--shimmer-width)) 0",
           },
         },
         "spin-around": {
@@ -49,9 +59,12 @@ module.exports = {
       fontFamily: {
         montserrat: ["Montserrat"],
       },
+      gridTemplateColumns: {
+        "55/45": "55% 45%",
+      },
     },
   },
-  plugins: [addVariablesForColors],
+  plugins: [addVariablesForColors, require("daisyui")],
 };
 
 // This plugin adds each Tailwind color as a global CSS variable, e.g., var(--gray-200).

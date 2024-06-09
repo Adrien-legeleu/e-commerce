@@ -1,369 +1,279 @@
-import React, { useEffect } from "react";
-import Swiper from "swiper";
+// In ProductDetails
 
-const ProductDetails: React.FC = () => {
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { api } from "../../config/api";
+import { IProduct } from "../../types/product";
+import { Header } from "../header";
+import { toast } from "react-toastify";
+import { UpdateProduct } from "./UpdateProduct";
+import { useProductAdminContext } from "../../contexts/productAdminContext";
+import { Collapse, CollapseProps } from "antd";
+import { ChevronRight } from "lucide-react";
+import { Slider } from "../slider";
+
+export const ProductDetails = () => {
+  const { productId } = useParams<{ productId: string }>();
+  const [product, setProduct] = useState<IProduct | null>(null);
+
+  const {
+    deleteProduct,
+    openUpdateModal,
+    recipeToEdit,
+    isOpenUpdateModal,
+    setIsOpenUpdateModal,
+    products,
+  } = useProductAdminContext();
+
+  const fetchProduct = async () => {
+    try {
+      const response = await api.get<IProduct>(`/products/${productId}`);
+      setProduct(response.data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Impossible de charger le produit.");
+    }
+  };
+
   useEffect(() => {
-    const swiperThumbs = new Swiper(".nav-for-slider", {
-      loop: true,
-      spaceBetween: 30,
-      slidesPerView: 5,
-    });
+    fetchProduct();
+  }, [productId]);
 
-    const swiperMain = new Swiper(".main-slide-carousel", {
-      slidesPerView: 1,
-      thumbs: {
-        swiper: swiperThumbs,
-      },
-    });
+  // Synchronize local product state with global state
+  useEffect(() => {
+    const updatedProduct = products.find((p) => p._id === productId);
+    if (updatedProduct) {
+      setProduct(updatedProduct);
+    }
+  }, [products, productId]);
 
-    // Clean up function for Swipers
-    return () => {
-      swiperThumbs.destroy();
-      swiperMain.destroy();
-    };
-  }, []); // Run only once on component mount
+  if (!product) {
+    return null;
+  }
+
+  const calculateDeliveryDate = (daysToAdd: any) => {
+    const date = new Date();
+    date.setDate(date.getDate() + daysToAdd);
+    return date.toLocaleDateString(); // Format de la date locale
+  };
+
+  const getItems: (
+    matter: string[],
+    deliveryDate: number[],
+    desc: string,
+    sexe: string,
+    typeClothe: string,
+    favoris: number,
+    qte: number
+  ) => CollapseProps["items"] = (
+    matter,
+    deliveryDate,
+    desc,
+    sexe,
+    typeClothe,
+    favoris,
+    qte
+  ) => [
+    {
+      key: "1",
+      label: "Matière et entretien",
+
+      children: (
+        <div className="px-5 text-sm">
+          <div className="flex flex-col gap-2 mb-5">
+            <p>
+              <span className="font-semibold">Composition :</span>
+            </p>
+            <ul className="list-disc pl-5">
+              {matter.map((matter) => {
+                return <li>{matter}</li>;
+              })}
+            </ul>
+          </div>
+          <p>
+            <span className="font-semibold">Conseil d'entretiens : </span>{" "}
+            Lavage en machine à 30 °C , lavage textiles délicats
+          </p>
+        </div>
+      ),
+      style: { marginBottom: "10px" },
+    },
+    {
+      key: "2",
+      label: "Livraison",
+      children: (
+        <div className="text-sm px-5 ">
+          <p>
+            <span className="font-semibold">Livraison estimé entre : </span>
+            <span>
+              {" "}
+              {calculateDeliveryDate(deliveryDate[0])} -{" "}
+              {calculateDeliveryDate(deliveryDate[1])}
+            </span>
+          </p>
+        </div>
+      ),
+      style: { marginBottom: "10px" },
+    },
+    {
+      key: "3",
+      label: "Description",
+      children: <p className="text-sm px-5">{desc}</p>,
+      style: { marginBottom: "10px" },
+    },
+    {
+      key: "4",
+      label: "Plus de Détails",
+      children: (
+        <ul className="text-sm list-disc px-5 capitalize">
+          <li>sexe : {sexe}</li>
+          <li>catégorie : {typeClothe}</li>
+          <li>En favoris : {favoris}</li>
+          <li>quantité : {qte}</li>
+        </ul>
+      ),
+    },
+  ];
 
   return (
-    <section className="py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="slider-box w-full h-full max-lg:mx-auto mx-0">
-            <div className="swiper main-slide-carousel swiper-container relative mb-6">
-              <div className="swiper-wrapper">
-                <div className="swiper-slide">
-                  <div className="block">
-                    <img
-                      src="https://pagedone.io/asset/uploads/1700472379.png"
-                      alt="Summer Travel Bag image"
-                      className="max-lg:mx-auto swiper-slide"
-                    />
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="block">
-                    <img
-                      src="https://pagedone.io/asset/uploads/1711622397.png"
-                      alt="Summer Travel Bag image"
-                      className="max-lg:mx-auto swiper-slide"
-                    />
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="block">
-                    <img
-                      src="https://pagedone.io/asset/uploads/1711622408.png"
-                      alt="Summer Travel Bag image"
-                      className="max-lg:mx-auto swiper-slide"
-                    />
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="block">
-                    <img
-                      src="https://pagedone.io/asset/uploads/1711622419.png"
-                      alt="Summer Travel Bag image"
-                      className="max-lg:mx-auto swiper-slide"
-                    />
-                  </div>
-                </div>
-                <div className="swiper-slide">
-                  <div className="block">
-                    <img
-                      src="https://pagedone.io/asset/uploads/1711622437.png"
-                      alt="Summer Travel Bag image"
-                      className="max-lg:mx-auto swiper-slide"
-                    />
-                  </div>
-                </div>
-              </div>
+    <div className="h-screen  w-full flex flex-col font-montserrat">
+      <Header />
+      <div className="grid-cols-55/45 grid w-full  relative py-12 px-24 gap-20">
+        <div className="bg-[#000000D0] left-6 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full z-30">
+          <Link to="/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="1.3em"
+              height="1.3em"
+              viewBox="0 0 24 24"
+            >
+              <g fill="none">
+                <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                <path
+                  fill="white"
+                  d="M3.283 10.94a1.5 1.5 0 0 0 0 2.12l5.656 5.658a1.5 1.5 0 1 0 2.122-2.122L7.965 13.5H19.5a1.5 1.5 0 0 0 0-3H7.965l3.096-3.096a1.5 1.5 0 1 0-2.122-2.121z"
+                />
+              </g>
+            </svg>
+          </Link>
+        </div>
+        <Slider images={product.imgUrl} />
+
+        <div className="space-y-6  w-full ">
+          <div className="space-y-1">
+            <h1 className="text-4xl capitalize font-semibold text-blackGray">
+              {product.title}
+            </h1>
+            <h2 className="text-2xl text-gray">{product.brand}</h2>
+            <p className="text-2xl font-semibold text-blackGray">
+              {product.price} €
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            <div>
+              <p className="capitalize">couleurs disponibles :</p>
+              <ul className="flex gap-3 mt-4">
+                {product.color.map((color, index) => (
+                  <li
+                    className={`w-8 h-6 rounded-full border-[1px] border-[#00000040]`}
+                    key={index}
+                    style={{ backgroundColor: color }}
+                  ></li>
+                ))}
+              </ul>
             </div>
-            <div className="nav-for-slider">
-              <div className="swiper-wrapper">
-                <div className="swiper-slide thumbs-slide">
-                  <img
-                    src="https://pagedone.io/asset/uploads/1700472379.png"
-                    alt="Summer Travel Bag image"
-                    className="cursor-pointer rounded-xl transition-all duration-500"
-                  />
-                </div>
-                <div className="swiper-slide thumbs-slide">
-                  <img
-                    src="https://pagedone.io/asset/uploads/1700472430.png"
-                    alt="Summer Travel Bag image"
-                    className="cursor-pointer rounded-xl transition-all duration-500 border hover:border-indigo-600"
-                  />
-                </div>
-                <div className="swiper-slide thumbs-slide">
-                  <img
-                    src="https://pagedone.io/asset/uploads/1700472416.png"
-                    alt="Summer Travel Bag image"
-                    className="cursor-pointer rounded-xl transition-all duration-500 border hover:border-indigo-600"
-                  />
-                </div>
-                <div className="swiper-slide thumbs-slide">
-                  <img
-                    src="https://pagedone.io/asset/uploads/1700472446.png"
-                    alt="Summer Travel Bag image"
-                    className="cursor-pointer rounded-xl transition-all duration-500 border hover:border-indigo-600"
-                  />
-                </div>
-                <div className="swiper-slide thumbs-slide">
-                  <img
-                    src="https://pagedone.io/asset/uploads/1700472467.png"
-                    alt="Summer Travel Bag image"
-                    className="cursor-pointer rounded-xl transition-all duration-500 border hover:border-indigo-600"
-                  />
-                </div>
-              </div>
+            <div>
+              <p className="capitalize">tailles disponibles :</p>
+              <ul className="flex gap-3 mt-4">
+                {product.size.map((size, index) => (
+                  <li
+                    className={`w-10 h-7 rounded-full border-[1px] text-sm flex items-center justify-center border-[#00000040]`}
+                    key={index}
+                  >
+                    {size}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-          <div className="flex justify-center items-center">
-            <div className="pro-detail w-full max-lg:max-w-[608px] lg:pl-8 xl:pl-16 max-lg:mx-auto max-lg:mt-8">
-              <div className="flex items-center justify-between gap-6 mb-6">
-                <div className="text">
-                  <h2 className="font-manrope font-bold text-3xl leading-10 text-gray-900 mb-2">
-                    Yellow Summer Travel Bag
-                  </h2>
-                  <p className="font-normal text-base text-gray-500">
-                    ABS LUGGAGE
-                  </p>
-                </div>
-                <button className="group transition-all duration-500 p-0.5">
-                  <svg
-                    width="60"
-                    height="60"
-                    viewBox="0 0 60 60"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle
-                      className="fill-indigo-50 transition-all duration-500 group-hover:fill-indigo-100"
-                      cx="30"
-                      cy="30"
-                      r="30"
-                      fill=""
-                    />
-                    <path
-                      className="stroke-indigo-600 transition-all duration-500 group-hover:stroke-indigo-700"
-                      d="M21.4709 31.3196L30.0282 39.7501L38.96 30.9506M30.0035 22.0789C32.4787 19.6404 36.5008 19.6404 38.976 22.0789C41.4512 24.5254 41.4512 28.4799 38.9842 30.9265M29.9956 22.0789C27.5205 19.6404 23.4983 19.6404 21.0231 22.0789C18.548 24.5174 18.548 28.4799 21.0231 30.9184M21.0231 30.9184L21.0441 30.939M21.0231 30.9184L21.4628 31.3115"
-                      stroke=""
-                      stroke-width="1.6"
-                      stroke-miterlimit="10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </button>
-              </div>
+          <Collapse
+            bordered={false}
+            size="large"
+            className="flex flex-col bg-white pr-10"
+            expandIcon={({ isActive }) => (
+              <ChevronRight
+                style={{
+                  transform: isActive ? "rotate(90deg)" : "rotate(0)",
+                  transition: "transform 0.3s ease",
+                }}
+                width={20}
+              />
+            )}
+            items={getItems(
+              product.matter,
+              product.deliveryDate,
+              product.desc,
+              product.sexe,
+              product.typeClothe,
+              product.favoris,
+              product.qte
+            )}
+          />
 
-              <div className="flex flex-col min-[400px]:flex-row min-[400px]:items-center mb-8 gap-y-3">
-                <div className="flex items-center">
-                  <h5 className="font-manrope font-semibold text-2xl leading-9 text-gray-900 ">
-                    $ 199.00{" "}
-                  </h5>
-                  <span className="ml-3 font-semibold text-lg text-indigo-600">
-                    30% off
-                  </span>
-                </div>
-                <svg
-                  className="mx-5 max-[400px]:hidden"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="2"
-                  height="36"
-                  viewBox="0 0 2 36"
+          <div className="pt-6 flex items-center justify-end gap-6">
+            <div
+              className="hover:scale-110 duration-150 cursor-pointer"
+              onClick={() => openUpdateModal(product)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25px"
+                height="25px"
+                viewBox="0 0 24 24"
+              >
+                <g
                   fill="none"
+                  stroke="black"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                 >
-                  <path d="M1 0V36" stroke="#E5E7EB" />
-                </svg>
-                <button className="flex items-center gap-1 rounded-lg bg-amber-400 py-1.5 px-2.5 w-max">
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g clip-path="url(#clip0_12657_16865)">
-                      <path
-                        d="M8.10326 2.26718C8.47008 1.52393 9.52992 1.52394 9.89674 2.26718L11.4124 5.33818C11.558 5.63332 11.8396 5.83789 12.1653 5.88522L15.5543 6.37768C16.3746 6.49686 16.7021 7.50483 16.1086 8.08337L13.6562 10.4738C13.4205 10.7035 13.313 11.0345 13.3686 11.3589L13.9475 14.7343C14.0877 15.5512 13.2302 16.1742 12.4966 15.7885L9.46534 14.1948C9.17402 14.0417 8.82598 14.0417 8.53466 14.1948L5.5034 15.7885C4.76978 16.1742 3.91235 15.5512 4.05246 14.7343L4.63137 11.3589C4.68701 11.0345 4.57946 10.7035 4.34378 10.4738L1.89144 8.08337C1.29792 7.50483 1.62543 6.49686 2.44565 6.37768L5.8347 5.88522C6.16041 5.83789 6.44197 5.63332 6.58764 5.33818L8.10326 2.26718Z"
-                        fill="white"
-                      />
-                      <g clip-path="url(#clip1_12657_16865)">
-                        <path
-                          d="M8.10326 2.26718C8.47008 1.52393 9.52992 1.52394 9.89674 2.26718L11.4124 5.33818C11.558 5.63332 11.8396 5.83789 12.1653 5.88522L15.5543 6.37768C16.3746 6.49686 16.7021 7.50483 16.1086 8.08337L13.6562 10.4738C13.4205 10.7035 13.313 11.0345 13.3686 11.3589L13.9475 14.7343C14.0877 15.5512 13.2302 16.1742 12.4966 15.7885L9.46534 14.1948C9.17402 14.0417 8.82598 14.0417 8.53466 14.1948L5.5034 15.7885C4.76978 16.1742 3.91235 15.5512 4.05246 14.7343L4.63137 11.3589C4.68701 11.0345 4.57946 10.7035 4.34378 10.4738L1.89144 8.08337C1.29792 7.50483 1.62543 6.49686 2.44565 6.37768L5.8347 5.88522C6.16041 5.83789 6.44197 5.63332 6.58764 5.33818L8.10326 2.26718Z"
-                          fill="white"
-                        />
-                      </g>
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_12657_16865">
-                        <rect width="18" height="18" fill="white" />
-                      </clipPath>
-                      <clipPath id="clip1_12657_16865">
-                        <rect width="18" height="18" fill="white" />
-                      </clipPath>
-                    </defs>
-                  </svg>
-                  <span className="text-base font-medium text-white">4.8</span>
-                </button>
-              </div>
-              <p className="font-medium text-lg text-gray-900 mb-2">Color</p>
-              <div className="grid grid-cols-3 gap-3 mb-6 max-w-sm">
-                <div className="color-box group">
-                  <div>
-                    <img
-                      src="https://pagedone.io/asset/uploads/1700472379.png"
-                      alt="Summer Travel Bag image"
-                      className="min-[400px]:h-[100px] aspect-square border-2 border-gray-100 rounded-xl transition-all duration-500 group-hover:border-indigo-600"
-                    />
-
-                    <p className="font-normal text-sm leading-6 text-gray-400 text-center mt-2 group-hover:text-indigo-600 ">
-                      Black
-                    </p>
-                  </div>
-                </div>
-
-                <div className="color-box group">
-                  <div>
-                    <img
-                      src="https://pagedone.io/asset/uploads/1700472517.png"
-                      alt="Summer Travel Bag image"
-                      className="border-2 border-gray-100 rounded-xl transition-all duration-500 group-hover:border-indigo-600"
-                    />
-                    <p className="font-normal text-sm leading-6 text-gray-400 text-center mt-2 group-hover:text-indigo-600 ">
-                      Brown
-                    </p>
-                  </div>
-                </div>
-
-                <div className="color-box group">
-                  <div>
-                    <img
-                      src="https://pagedone.io/asset/uploads/1700472529.png"
-                      alt="Summer Travel Bag image"
-                      className="border-2 border-gray-100 rounded-xl transition-all duration-500 group-hover:border-indigo-600"
-                    />
-                    <p className="font-normal text-sm leading-6 text-gray-400 text-center mt-2 group-hover:text-indigo-600 ">
-                      Beige
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <p className="font-medium text-lg text-gray-900 mb-2">
-                Size (KG)
-              </p>
-              <div className="grid grid-cols-2 min-[400px]:grid-cols-4 gap-3 mb-3 min-[400px]:mb-8">
-                <button className="border border-gray-200 whitespace-nowrap text-gray-900 text-sm leading-6 py-2.5 rounded-full px-5 text-center w-full font-semibold shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                  Full Set
-                </button>
-                <button className="border border-gray-200 whitespace-nowrap text-gray-900 text-sm leading-6 py-2.5 rounded-full px-5 text-center w-full font-semibold shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                  10 kg
-                </button>
-                <button className="border border-gray-200 whitespace-nowrap text-gray-900 text-sm leading-6 py-2.5 rounded-full px-5 text-center w-full font-semibold shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                  25 kg
-                </button>
-                <button className="border border-gray-200 whitespace-nowrap text-gray-900 text-sm leading-6 py-2.5 rounded-full px-5 text-center w-full font-semibold shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                  35 kg
-                </button>
-              </div>
-              <div className="flex items-center flex-col min-[400px]:flex-row gap-3 mb-3 min-[400px]:mb-8">
-                <div className=" flex items-center justify-center border border-gray-400 rounded-full">
-                  <button className="group py-[14px] px-3 w-full border-r border-gray-400 rounded-l-full h-full flex items-center justify-center bg-white shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                    <svg
-                      className="stroke-black group-hover:stroke-black"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M16.5 11H5.5"
-                        stroke=""
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M16.5 11H5.5"
-                        stroke=""
-                        stroke-opacity="0.2"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M16.5 11H5.5"
-                        stroke=""
-                        stroke-opacity="0.2"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </button>
-                  <input
-                    type="text"
-                    className="font-semibold text-gray-900 text-lg py-3 px-2 w-full min-[400px]:min-w-[75px] h-full bg-transparent placeholder:text-gray-900 text-center hover:text-indigo-600 outline-0 hover:placeholder:text-indigo-600"
-                    placeholder="1"
-                  />
-                  <button className="group py-[14px] px-3 w-full border-l border-gray-400 rounded-r-full h-full flex items-center justify-center bg-white shadow-sm shadow-transparent transition-all duration-300 hover:bg-gray-50 hover:shadow-gray-300">
-                    <svg
-                      className="stroke-black group-hover:stroke-black"
-                      width="22"
-                      height="22"
-                      viewBox="0 0 22 22"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M11 5.5V16.5M16.5 11H5.5"
-                        stroke="#9CA3AF"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M11 5.5V16.5M16.5 11H5.5"
-                        stroke="black"
-                        stroke-opacity="0.2"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M11 5.5V16.5M16.5 11H5.5"
-                        stroke="black"
-                        stroke-opacity="0.2"
-                        stroke-width="1.6"
-                        stroke-linecap="round"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                <button className="group py-3 px-5 rounded-full bg-indigo-50 text-indigo-600 font-semibold text-lg w-full flex items-center justify-center gap-2 shadow-sm shadow-transparent transition-all duration-500 hover:shadow-indigo-300 hover:bg-indigo-100">
-                  <svg
-                    className="stroke-indigo-600 transition-all duration-500 group-hover:stroke-indigo-600"
-                    width="22"
-                    height="22"
-                    viewBox="0 0 22 22"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.7394 17.875C10.7394 18.6344 10.1062 19.25 9.32511 19.25C8.54402 19.25 7.91083 18.6344 7.91083 17.875M16.3965 17.875C16.3965 18.6344 15.7633 19.25 14.9823 19.25C14.2012 19.25 13.568 18.6344 13.568 17.875M4.1394 5.5L5.46568 12.5908C5.73339 14.0221 5.86724 14.7377 6.37649 15.1605C6.88573 15.5833 7.61377 15.5833 9.06984 15.5833H15.2379C16.6941 15.5833 17.4222 15.5833 17.9314 15.1605C18.4407 14.7376 18.5745 14.0219 18.8421 12.5906L19.3564 9.84059C19.7324 7.82973 19.9203 6.8243 19.3705 6.16215C18.8207 5.5 17.7979 5.5 15.7522 5.5H4.1394ZM4.1394 5.5L3.66797 2.75"
-                      stroke=""
-                      stroke-width="1.6"
-                      stroke-linecap="round"
-                    />
-                  </svg>
-                  Add to cart
-                </button>
-              </div>
-              <button className="text-center w-full px-5 py-4 rounded-[100px] bg-indigo-600 flex items-center justify-center font-semibold text-lg text-white shadow-sm shadow-transparent transition-all duration-500 hover:bg-indigo-700 hover:shadow-indigo-300">
-                Buy Now
-              </button>
+                  <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1l1-4Z" />
+                </g>
+              </svg>
             </div>
+            <Link to="/">
+              <div
+                className="hover:scale-110 duration-150 cursor-pointer"
+                onClick={() => deleteProduct(product._id)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="28px"
+                  height="28px"
+                  viewBox="0 0 24 24"
+                >
+                  <g fill="none">
+                    <path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+                    <path
+                      fill="black"
+                      d="M20 5a1 1 0 1 1 0 2h-1l-.003.071l-.933 13.071A2 2 0 0 1 16.069 22H7.93a2 2 0 0 1-1.995-1.858l-.933-13.07A1.017 1.017 0 0 1 5 7H4a1 1 0 0 1 0-2zm-6-3a1 1 0 1 1 0 2h-4a1 1 0 0 1 0-2z"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
-    </section>
+      {isOpenUpdateModal && recipeToEdit && (
+        <UpdateProduct
+          closeUpdateModal={() => setIsOpenUpdateModal(false)}
+          recipeToEdit={recipeToEdit}
+        />
+      )}
+    </div>
   );
 };
-
-export default ProductDetails;

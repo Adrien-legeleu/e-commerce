@@ -5,6 +5,7 @@ import { CreateProduct } from "./CreateProduct";
 import { Link } from "react-router-dom";
 import { useProductAdminContext } from "../../contexts/productAdminContext";
 import { UpdateProduct } from "./UpdateProduct";
+import { FilterComponent } from "../Filter";
 
 export const Products = () => {
   const {
@@ -18,6 +19,7 @@ export const Products = () => {
   } = useProductAdminContext();
 
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
+  const [productsFiltered, setProductsFiltered] = useState<IProduct[]>([]);
 
   const openCreateModal = () => {
     setIsOpenCreateModal(true);
@@ -31,7 +33,7 @@ export const Products = () => {
     try {
       const response = await api.get<IProduct[]>("/products");
       setProducts(response.data);
-      console.log(response.data);
+      setProductsFiltered(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -42,15 +44,13 @@ export const Products = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className="py-10 flex items-center justify-center">
-        <button
-          className="py-3 px-6 bg-slate-200 rounded-full"
-          onClick={openCreateModal}
-        >
-          Create Product
-        </button>
-      </div>
+    <div className="flex flex-col gap-12 font-montserrat">
+      <FilterComponent
+        setProducts={setProducts}
+        setProductsFiltered={setProductsFiltered}
+        productsFiltered={productsFiltered}
+        openCreateModal={openCreateModal}
+      />
 
       <div className="grid px-10 grid-cols-4 items-start justify-center gap-8">
         {products.map((product, index) => (
@@ -59,16 +59,7 @@ export const Products = () => {
               to={`/${product._id}`}
               className="flex flex-col justify-end h-full "
             >
-              <div className="hover:scale-105 bg-[#F9FAFB] w-full border-[#a1a1a159] border-[1px] space-y-5  p-5 rounded-2xl cursor-pointer group duration-200">
-                <div>
-                  <h3 className="text-left text-lg font-semibold text-blackGray">
-                    {product.title}
-                  </h3>
-                  <h4 className="text-left text-sm text-gray">
-                    {product.brand}
-                  </h4>
-                </div>
-
+              <div className="hover:scale-105 w-full space-y-5    cursor-pointer group duration-200">
                 <div className="relative group group-hover:shadow-2xl duration-200 rounded-2xl">
                   <img
                     className="rounded-2xl w-full object-cover aspect-[7/8]"
@@ -125,37 +116,24 @@ export const Products = () => {
                     </ul>
                   </div>
                 </div>
-                <div>
-                  <ul className="flex justify-between">
-                    <li className="text-blackGray font-semibold text-2xl text-left ">
+                <div className="flex justify-between">
+                  <div>
+                    <h3 className="text-left text font-semibold text-blackGray tracking-wide">
+                      {product.title}
+                    </h3>
+                    <h4 className="text-left text-sm text-gray">
+                      {product.brand}
+                    </h4>
+                  </div>
+                  <div>
+                    <h4 className="text-ld font-semibold text-blackGray tracking-wider">
                       {product.price} €
-                    </li>
-                    {(product.deliveryDate[0] + product.deliveryDate[1]) / 2 <
-                      8 && (
-                      <li className="flex items-center space-x-1">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="1em"
-                          height="1em"
-                          viewBox="0 0 24 24"
-                        >
-                          <g
-                            fill="none"
-                            stroke="black"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.5"
-                            color="black"
-                          >
-                            <path d="M19.5 17.5a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0m-10 0a2.5 2.5 0 1 1-5 0a2.5 2.5 0 0 1 5 0" />
-                            <path d="M14.5 17.5h-5M2 4h10c1.414 0 2.121 0 2.56.44C15 4.878 15 5.585 15 7v8.5m.5-9h1.801c.83 0 1.245 0 1.589.195c.344.194.557.55.984 1.262l1.699 2.83c.212.354.318.532.373.728c.054.197.054.403.054.816V15c0 .935 0 1.402-.201 1.75a1.5 1.5 0 0 1-.549.549c-.348.201-.815.201-1.75.201M2 13v2c0 .935 0 1.402.201 1.75a1.5 1.5 0 0 0 .549.549c.348.201.815.201 1.75.201M2 7h6m-6 3h4" />
-                          </g>
-                        </svg>
-                        <p>Express</p>
-                      </li>
-                    )}
-                  </ul>
+                    </h4>
+                  </div>
                 </div>
+                <button className="bg-grayLight rounded-xl py-3  w-full text-center hover:scale-105 duration-300 ease-in-out">
+                  Voir plus de détails
+                </button>
               </div>
             </Link>
             <div className="pt-6 flex items-center justify-end gap-6">
