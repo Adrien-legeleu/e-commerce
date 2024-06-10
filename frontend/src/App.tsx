@@ -1,11 +1,14 @@
 import { BrowserRouter } from "react-router-dom";
 import { RouterApp } from "./Router/RouterApp";
+import { HeaderContextProvider } from "./contexts/HeaderContext";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <RouterApp />
-    </BrowserRouter>
+    <HeaderContextProvider>
+      <BrowserRouter>
+        <RouterApp />
+      </BrowserRouter>
+    </HeaderContextProvider>
   );
 };
 

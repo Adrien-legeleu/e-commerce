@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
 import { IProduct } from "../types/product";
 import { api } from "../config/api";
 import { Header } from "../components";
 import { IProductCart } from "../types/productCart";
+import { Slider } from "../components/slider";
+import { Collapse, CollapseProps } from "antd";
+import { ChevronRight } from "lucide-react";
+import lottie from "lottie-web";
+import { defineElement } from "@lordicon/element";
+import { useHeaderContext } from "../contexts/HeaderContext";
+
+// define "lord-icon" custom element with default properties
+defineElement(lottie.loadAnimation);
 
 export const ProductDetails = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -30,6 +37,8 @@ export const ProductDetails = () => {
   );
   const [triggerAddToCart, setTriggerAddToCart] = useState(false);
 
+  const { getProductsCart, productsToCart } = useHeaderContext();
+
   const onChangeDataValue = ({ key, value }: any) => {
     console.log(dataProductCart);
 
@@ -51,7 +60,7 @@ export const ProductDetails = () => {
         qte: response.data?.qte,
         qteToCart: 0,
         price: response.data?.price,
-        deliveryDate: response.data?.deliveryDate,
+        deliveryDate: response.data?.deliveryDate[0],
         imgUrl: response.data?.imgUrl[0],
         status: response.data?.status,
         sexe: response.data?.sexe,
@@ -79,6 +88,9 @@ export const ProductDetails = () => {
 
   const addToCart = async () => {
     try {
+      getProductsCart();
+      console.log(productsToCart);
+
       await api.post(`/products/cart`, dataProductCart);
       toast.success("produit ajouté au panier");
     } catch (error) {
@@ -90,12 +102,87 @@ export const ProductDetails = () => {
     return null;
   }
 
+  const calculateDeliveryDate = (daysToAdd: any) => {
+    const date = new Date();
+    date.setDate(date.getDate() + daysToAdd);
+    return date.toLocaleDateString(); // Format de la date locale
+  };
+
+  const getItems: (
+    matter: string[],
+    deliveryDate: number[],
+    desc: string,
+    sexe: string,
+    typeClothe: string
+  ) => CollapseProps["items"] = (
+    matter,
+    deliveryDate,
+    desc,
+    sexe,
+    typeClothe
+  ) => [
+    {
+      key: "1",
+      label: "Matière et entretien",
+
+      children: (
+        <div className="px-5 text-sm">
+          <div className="flex flex-col gap-2 mb-5">
+            <p>
+              <span className="font-semibold">Composition :</span>
+            </p>
+            <ul className="list-disc pl-5">
+              {matter.map((matter, index) => (
+                <li key={index}>{matter}</li>
+              ))}
+            </ul>
+          </div>
+          <p>
+            <span className="font-semibold">Conseil d'entretien : </span> Lavage
+            en machine à 30 °C, lavage textiles délicats
+          </p>
+        </div>
+      ),
+      style: { marginBottom: "10px" },
+    },
+    {
+      key: "2",
+      label: "Livraison",
+      children: (
+        <div className="text-sm px-5 ">
+          <p>
+            <span className="font-semibold">Livraison estimée entre : </span>
+            <span>
+              {calculateDeliveryDate(deliveryDate[0])} -{" "}
+              {calculateDeliveryDate(deliveryDate[1])}
+            </span>
+          </p>
+        </div>
+      ),
+      style: { marginBottom: "10px" },
+    },
+    {
+      key: "3",
+      label: "Description",
+      children: (
+        <div>
+          <p className="text-sm px-5">{desc}</p>
+          <ul className="text-sm list-disc px-5 capitalize pt-3">
+            <li>Sexe : {sexe}</li>
+            <li>Catégorie : {typeClothe}</li>
+          </ul>
+        </div>
+      ),
+      style: { marginBottom: "10px" },
+    },
+  ];
+
   return (
-    <div className="h-full w-full flex flex-col pb-12">
+    <div className="h-full w-full flex flex-col pb-12 font-montserrat">
       <Header />
-      <div className="flex flex-row-reverse w-3/5 pt-12 m-auto relative">
-        <Link to="/">
-          <div className="bg-[#000000D0] -left-40 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full">
+      <div className="grid-cols-55/45 grid relative py-12 px-24 gap-20">
+        <div className="bg-[#000000D0] left-6 top-10 flex items-center justify-center w-12 h-8 absolute rounded-full">
+          <Link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="1.3em"
@@ -110,25 +197,24 @@ export const ProductDetails = () => {
                 />
               </g>
             </svg>
+          </Link>
+        </div>
+        <Slider images={product.imgUrl} />
+        <div className="w-full space-y-10">
+          <div className="space-y-1">
+            <h1 className="text-4xl capitalize font-semibold text-blackGray">
+              {product.title}
+            </h1>
+            <h2 className="text-2xl text-gray">{product.brand}</h2>
+            <p className="text-2xl font-semibold text-blackGray">
+              {product.price} €
+            </p>
           </div>
-        </Link>
-        <div className="space-y-6 w-full pl-64">
-          <div>
-            <h1 className="text-4xl capitalize">{product.title}</h1>
-            <p className="text-2xl">{product.desc}</p>
-          </div>
-          <p className="text-red-700 text-xl">Prix : {product.price} €</p>
-
-          <p>
-            Sexe : <span> {product.sexe}</span>{" "}
-          </p>
-
-          <div>
-            <p className="capitalize">couleurs disponibles :</p>
-            <ul className="flex gap-3 mt-4">
+          <div className="space-y-6 pt-4">
+            <ul className="flex gap-3 ">
               {product.color.map((color: string, index: number) => (
                 <li
-                  className={`w-8 h-6 rounded-full duration-200 cursor-pointer  ${
+                  className={`w-10 h-7 rounded-full duration-200 cursor-pointer  ${
                     dataProductCart?.color == color
                       ? "border-[2px] border-[#00000085]"
                       : "border-[1px] border-[#00000040]"
@@ -141,9 +227,7 @@ export const ProductDetails = () => {
                 ></li>
               ))}
             </ul>
-          </div>
-          <div>
-            <p className="capitalize">tailles disponibles :</p>
+
             <ul className="flex gap-3 mt-4">
               {product.size.map((size: string, index: number) => (
                 <li
@@ -162,7 +246,6 @@ export const ProductDetails = () => {
               ))}
             </ul>
           </div>
-
           <div>
             <button
               onClick={() => {
@@ -170,18 +253,33 @@ export const ProductDetails = () => {
                 onChangeDataValue({ key: "qteToCart", value: 1 });
                 setTriggerAddToCart(true);
               }}
+              className="bg-grayLight w-1/2 text-lg  font-normal tracking-wider text-center py-4 rounded-2xl"
             >
               Ajouter au panier
             </button>
           </div>
+          <Collapse
+            bordered={false}
+            size="large"
+            className="flex flex-col bg-white pr-10"
+            expandIcon={({ isActive }) => (
+              <ChevronRight
+                style={{
+                  transform: isActive ? "rotate(90deg)" : "rotate(0)",
+                  transition: "transform 0.3s ease",
+                }}
+                width={20}
+              />
+            )}
+            items={getItems(
+              product.matter,
+              product.deliveryDate,
+              product.desc,
+              product.sexe,
+              product.typeClothe
+            )}
+          />
         </div>
-        <Carousel autoPlay interval={5000} transitionTime={500} infiniteLoop>
-          {product.imgUrl.map((img, index) => (
-            <div className="rounded-3xl border-none mx-2" key={index}>
-              <img className="rounded-3xl" src={img} alt={`thumb ${index}`} />
-            </div>
-          ))}
-        </Carousel>
       </div>
     </div>
   );

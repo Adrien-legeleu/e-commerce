@@ -5,14 +5,17 @@ export interface IProduct {
   desc: string;
   price: number;
   qte: number;
-  imgUrl: [string];
-  color: [string];
-  size: [string];
+  imgUrl: string[];
+  color: string[];
+  size: string[];
   status: string;
   sexe: string;
-  deliveryDate: number;
+  deliveryDate: number[];
   favoris: number;
   isFavoris: boolean;
+  typeClothe: string;
+  matter: string[];
+  brand: string;
   createdAt: Date;
   updatedAt: Date;
 }

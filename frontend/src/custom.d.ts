@@ -9,6 +9,7 @@ declare namespace JSX {
       style?: any;
       state?: string;
       colors?: string;
+      delay?: string;
     };
   }
 }

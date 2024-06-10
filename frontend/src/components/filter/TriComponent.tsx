@@ -4,7 +4,7 @@ import {
   ArrowDownWideNarrow,
   Flame,
 } from "lucide-react";
-import { IProduct } from "../types/product";
+import { IProduct } from "../../types/product";
 import {
   filterDecreasing,
   filterIncreasing,

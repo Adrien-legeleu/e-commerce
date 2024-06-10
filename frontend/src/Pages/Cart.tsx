@@ -5,12 +5,16 @@ import { InputNumber } from "antd";
 import { Check, Trash2 } from "lucide-react";
 import { IProductCart } from "../types/productCart";
 import { Link } from "react-router-dom";
+import { useHeaderContext } from "../contexts/HeaderContext";
 
 export const Cart = () => {
   const [products, setProducts] = useState<IProductCart[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [minDeliveryDate, setMinDeliveryDate] = useState<Date | null>(null);
   const [maxDeliveryDate, setMaxDeliveryDate] = useState<Date | null>(null);
+
+  const { getProductsCart, productsToCart, getLenghtProductsToCart } =
+    useHeaderContext();
 
   const getProducts = async () => {
     try {
@@ -95,6 +99,12 @@ export const Cart = () => {
       setProducts((prevProducts) => {
         return prevProducts.filter((product) => product._id !== productCartId);
       });
+      const productInCart = products.length - 1;
+      getLenghtProductsToCart(productInCart);
+
+      getProductsCart();
+      console.log(productsToCart);
+
       await api.delete(`products/cart/${productCartId}`);
     } catch (error) {
       console.log("Error deleting productCart: ", error);
