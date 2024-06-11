@@ -16,7 +16,7 @@ module.exports = {
       gridTemplateColumns: {
         "60/40": "60% 40%",
         "55/45": "55% 45%",
-        "70/30": "70% 30%",
+        "63/37": "63% 37%",
       },
       animation: {
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
@@ -63,7 +63,7 @@ module.exports = {
   plugins: [addVariablesForColors, require("daisyui")],
 };
 
-function addVariablesForColors({ addBase, theme }: any) {
+function addVariablesForColors({ addBase, theme }) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
