@@ -5,6 +5,7 @@ import { Label } from "../components/design/Label";
 import ShimmerButton from "../components/design/ShimmerButton";
 import { api } from "../config/api";
 import { IProductCart } from "../types/productCart";
+import BoxReveal from "../components/design/BoxReveal"; // Correct import path
 
 export const Checkout = () => {
   const [productsCart, setproductsCart] = useState<IProductCart[]>([]);
@@ -17,15 +18,18 @@ export const Checkout = () => {
       const response = await api.get("/products/cart");
       setproductsCart(response.data);
     } catch (error) {
-      console.log("error fatching products : " + error);
+      console.log("error fetching products : " + error);
     }
   };
 
   useEffect(() => {
     getProductsCart();
+  }, []);
+
+  useEffect(() => {
     calculateTotalPrice(productsCart);
     calculateDeliveryDate(productsCart);
-  }, []);
+  }, [productsCart]);
 
   const calculateTotalPrice = (productsCart: IProductCart[]) => {
     const total = productsCart.reduce(
@@ -58,72 +62,96 @@ export const Checkout = () => {
   return (
     <div>
       <Header />
-      <div className="grid grid-cols-63/37 px-12 pt-16 gap-8">
-        <div className="grid grid-cols-2 gap-8">
-          <div className=" ">
+      <div className="grid grid-cols-63/37 px-20 pt-16 gap-16 font-montserrat">
+        <div className="grid grid-cols-2 gap-8 max-h-[calc(100vh-200px)] relative">
+          <div>
             <Label htmlFor="email">Votre nom</Label>
-            <Input id="email" placeholder="Lucas" type="email" required />
+            <BoxReveal width={"100%"}>
+              <Input id="email" placeholder="Lucas" type="email" required />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div>
             <Label htmlFor="email">Votre email</Label>
-            <Input
-              id="email"
-              placeholder="projectmayhem@fc.com"
-              type="email"
-              required
-            />
+            <BoxReveal width={"100%"}>
+              <Input
+                id="email"
+                placeholder="projectmayhem@fc.com"
+                type="email"
+                required
+              />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div>
             <Label htmlFor="tel">Numéro de téléphone</Label>
-            <Input id="tel" placeholder="06 73 45 37 20" type="tel" required />
+            <BoxReveal width={"100%"}>
+              <Input
+                id="tel"
+                placeholder="06 73 45 37 20"
+                type="tel"
+                required
+              />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div>
             <Label htmlFor="country">Pays</Label>
-            <Input id="country" placeholder="France" type="text" required />
+            <BoxReveal width={"100%"}>
+              <Input id="country" placeholder="France" type="text" required />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div>
             <Label htmlFor="city">Ville</Label>
-            <Input
-              id="city"
-              placeholder="projectmayhem@fc.com"
-              type="text"
-              required
-            />
+            <BoxReveal width={"100%"}>
+              <Input
+                id="city"
+                placeholder="projectmayhem@fc.com"
+                type="text"
+                required
+              />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div>
             <Label htmlFor="adress">Adresse (numéro et rue)</Label>
-            <Input
-              id="adress"
-              placeholder="15 rue de paris"
-              type="text"
-              required
-            />
+            <BoxReveal width={"100%"}>
+              <Input
+                id="adress"
+                placeholder="15 rue de paris"
+                type="text"
+                required
+              />
+            </BoxReveal>
           </div>
-          <div className="">
+          <div className="w-full">
             <Label htmlFor="postal">Code postale</Label>
-            <Input id="postal" placeholder="91120" type="text" required />
+            <BoxReveal width={"100%"}>
+              <Input
+                id="postal"
+                placeholder="91120"
+                type="text"
+                required
+                className="w-full"
+              />
+            </BoxReveal>
           </div>
         </div>
-        <div className="w-full px-8">
-          <div className="bg-[#F9FAFB] py-8 px-5 rounded-3xl">
-            <h2 className="text-2xl">Résumé de la commande</h2>
-            <div className="flex gap-4 flex-col my-6">
+        <div className="w-full px-4">
+          <div className="bg-[#F9FAFB] py-8 space-y-4 px-6 rounded-3xl">
+            <div className="flex gap-4 flex-col">
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
                 <h6 className="text-[#6b7280] text-lg">Total</h6>
                 <p className="font-semibold">{totalPrice} $</p>
               </div>
-              <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
+              <div className="flex justify-between items-center border-b-[1px] border-[#6b72801e] pb-5">
                 <h6 className="text-[#6b7280] text-lg">Prix de la livraison</h6>
                 <p className="font-semibold">
                   {productsCart.length > 0 ? "5,00 $" : "0 $"}
                 </p>
               </div>
-              <div className="flex justify-between pb-5 border-b-[1px] border-[#6b72801e]">
+              <div className="flex justify-between items-center pb-5 border-b-[1px] border-[#6b72801e]">
                 <h6 className="text-[#6b7280] text-lg">Date de livraison</h6>
                 <p>
                   {minDeliveryDate
                     ? minDeliveryDate.toLocaleDateString()
-                    : "N/A"}{" "}
+                    : "N/A"}
                   -{" "}
                   {maxDeliveryDate
                     ? maxDeliveryDate.toLocaleDateString()
@@ -131,7 +159,7 @@ export const Checkout = () => {
                 </p>
               </div>
               <div className="flex justify-between pb-5">
-                <h6 className=" text-xl font-semibold">Total de la commande</h6>
+                <h6 className="text-xl font-semibold">Total de la commande</h6>
                 <p className="font-semibold text-lg">{totalPrice + 5} $</p>
               </div>
             </div>
@@ -141,6 +169,43 @@ export const Checkout = () => {
                   Commander
                 </span>
               </ShimmerButton>
+            </div>
+            <div>
+              <h3>Votre commande :</h3>
+              {productsCart.map((product, index) =>
+                index < 3 ? (
+                  <div
+                    key={`product-to-cart-number-${index}`}
+                    className="flex border-b-[2px] py-2 border-[#6b728011] h-16 relative"
+                  >
+                    <div className="h-full">
+                      <img
+                        src={product.imgUrl}
+                        className="rounded-md shadow-xl h-full aspect-[4/5] object-cover"
+                        alt={`img de ${product.title}`}
+                      />
+                    </div>
+                    <div className="relative left-5 flex flex-col justify-between">
+                      <div className="space-y-1">
+                        <h1 className="text-sm">{product.title}</h1>
+                        <div className="flex gap-5 text-[#6B7280] text-[0.7rem]">
+                          <p>{product.color}</p>
+                          <p>{product.size}</p>
+                          <p className="font-semibold">${product.price}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  index === 3 && (
+                    <div key={`product-to-cart-number-${index}`}>
+                      <h4 className="text-4xl text-center font-semibold">
+                        {productsCart.length - 3}+
+                      </h4>
+                    </div>
+                  )
+                )
+              )}
             </div>
           </div>
         </div>
