@@ -6,6 +6,7 @@ import { Check, Trash2 } from "lucide-react";
 import { IProductCart } from "../types/productCart";
 import { Link } from "react-router-dom";
 import { useHeaderContext } from "../contexts/HeaderContext";
+import { toast } from "react-toastify";
 
 export const Cart = () => {
   const [products, setProducts] = useState<IProductCart[]>([]);
@@ -13,20 +14,17 @@ export const Cart = () => {
   const [minDeliveryDate, setMinDeliveryDate] = useState<Date | null>(null);
   const [maxDeliveryDate, setMaxDeliveryDate] = useState<Date | null>(null);
 
-  const { getProductsCart, productsToCart, getLenghtProductsToCart } =
-    useHeaderContext();
+  const { getProductsCart } = useHeaderContext();
 
   const getProducts = async () => {
     try {
       const response = await api.get<IProductCart[]>("products/cart");
-
       const productsToAdd: IProductCart[] = response.data.filter(
         (product: any) => product.isToCart
       );
-
-      if (productsToAdd.length > 0) {
-        setProducts(productsToAdd);
-      }
+      setProducts(productsToAdd);
+      calculateDeliveryDate(productsToAdd); // Calculate delivery dates here
+      calculateTotalPrice(productsToAdd); // Calculate total price here
     } catch (error) {
       console.log("error get products : " + error);
     }
@@ -36,7 +34,7 @@ export const Cart = () => {
     getProducts();
   }, []);
 
-  const calculateTotalPrice = () => {
+  const calculateTotalPrice = (products: IProductCart[]) => {
     const total = products.reduce(
       (total, product) => total + product.price * product.qteToCart,
       0
@@ -52,11 +50,9 @@ export const Cart = () => {
     );
 
     const minDays = Math.min(...deliveryDays);
-
     const maxDays = Math.max(...deliveryDays);
 
     const today = new Date();
-
     const newMinDeliveryDate = new Date(today);
     newMinDeliveryDate.setDate(today.getDate() + minDays);
     setMinDeliveryDate(newMinDeliveryDate);
@@ -67,7 +63,8 @@ export const Cart = () => {
   };
 
   useEffect(() => {
-    calculateTotalPrice();
+    getProductsCart();
+    calculateTotalPrice(products);
     calculateDeliveryDate(products);
   }, [products]);
 
@@ -99,13 +96,9 @@ export const Cart = () => {
       setProducts((prevProducts) => {
         return prevProducts.filter((product) => product._id !== productCartId);
       });
-      const productInCart = products.length - 1;
-      getLenghtProductsToCart(productInCart);
-
-      getProductsCart();
-      console.log(productsToCart);
-
       await api.delete(`products/cart/${productCartId}`);
+
+      toast.success("Produit retiré du panier");
     } catch (error) {
       console.log("Error deleting productCart: ", error);
     }
@@ -143,7 +136,6 @@ export const Cart = () => {
                       </div>
                       <div>
                         <p className="flex gap-1">
-                          {" "}
                           <Check color="#599400" />
                           {product.status}
                         </p>
@@ -183,7 +175,7 @@ export const Cart = () => {
                 </p>
               </div>
               <div className="flex justify-between pb-5 border-b-[1px] border-[#6b72801e]">
-                <h6 className="text-[#6b7280] text-lg">date de livraison</h6>
+                <h6 className="text-[#6b7280] text-lg">Date de livraison</h6>
                 <p>
                   {minDeliveryDate
                     ? minDeliveryDate.toLocaleDateString()
@@ -199,9 +191,11 @@ export const Cart = () => {
                 <p className="font-semibold text-lg">{totalPrice + 5} $</p>
               </div>
             </div>
-            <button className="bg-[#4F46E5] py-4 text-center text-white w-full text-xl rounded-3xl">
-              Commander
-            </button>
+            <Link to="/checkout">
+              <button className="bg-[#4F46E5] py-4 text-lg text-white font-semibold w-full rounded-2xl">
+                Passer la commande
+              </button>
+            </Link>
           </div>
         </div>
       </div>

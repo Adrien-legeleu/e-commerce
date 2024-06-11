@@ -16,6 +16,7 @@ module.exports = {
       gridTemplateColumns: {
         "60/40": "60% 40%",
         "55/45": "55% 45%",
+        "70/30": "70% 30%",
       },
       animation: {
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
@@ -54,12 +55,15 @@ module.exports = {
       fontFamily: {
         montserrat: ["Montserrat"],
       },
+      boxShadow: {
+        input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
+      },
     },
   },
   plugins: [addVariablesForColors, require("daisyui")],
 };
 
-function addVariablesForColors({ addBase, theme }) {
+function addVariablesForColors({ addBase, theme }: any) {
   let allColors = flattenColorPalette(theme("colors"));
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])

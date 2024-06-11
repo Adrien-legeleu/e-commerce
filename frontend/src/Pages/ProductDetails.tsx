@@ -37,11 +37,9 @@ export const ProductDetails = () => {
   );
   const [triggerAddToCart, setTriggerAddToCart] = useState(false);
 
-  const { getProductsCart, productsToCart } = useHeaderContext();
+  const { getProductsCart, getProductsFavorites } = useHeaderContext();
 
   const onChangeDataValue = ({ key, value }: any) => {
-    console.log(dataProductCart);
-
     setDataProductCart((prev: any) => ({
       ...prev,
       [key]: value,
@@ -88,11 +86,9 @@ export const ProductDetails = () => {
 
   const addToCart = async () => {
     try {
-      getProductsCart();
-      console.log(productsToCart);
-
-      await api.post(`/products/cart`, dataProductCart);
       toast.success("produit ajouté au panier");
+      await api.post(`/products/cart`, dataProductCart);
+      getProductsCart();
     } catch (error) {
       console.error("Error add product to cart :", error);
     }
@@ -177,6 +173,40 @@ export const ProductDetails = () => {
     },
   ];
 
+  const handleFavoriteToggle = async (
+    productId: string,
+    currentStatus: boolean
+  ) => {
+    const newStatus = !currentStatus;
+    try {
+      await api.patch(`/products/favoris/${productId}`, {
+        action: newStatus,
+      });
+
+      getProductsFavorites();
+
+      setProduct((prevProduct) => {
+        if (!prevProduct) {
+          return prevProduct;
+        }
+
+        if (prevProduct._id === productId) {
+          return {
+            ...prevProduct,
+            isFavoris: newStatus,
+            favoris: newStatus
+              ? (prevProduct.favoris || 0) + 1
+              : (prevProduct.favoris || 0) - 1,
+          };
+        }
+
+        return prevProduct;
+      });
+    } catch (error) {
+      console.error("Error updating favorite status:", error);
+    }
+  };
+
   return (
     <div className="h-full w-full flex flex-col pb-12 font-montserrat">
       <Header />
@@ -246,17 +276,44 @@ export const ProductDetails = () => {
               ))}
             </ul>
           </div>
-          <div>
+          <div className="flex w-full gap-12">
             <button
               onClick={() => {
                 onChangeDataValue({ key: "isToCart", value: true });
                 onChangeDataValue({ key: "qteToCart", value: 1 });
                 setTriggerAddToCart(true);
               }}
-              className="bg-grayLight w-1/2 text-lg  font-normal tracking-wider text-center py-4 rounded-2xl"
+              className="bg-grayLight w-1/2 text-lg  font-normal tracking-wider text-center py-4 rounded-2xl hover:translate-x-2 duration-200 ease-in-out"
             >
               Ajouter au panier
             </button>
+
+            <div
+              className="cursor-pointer flex flex-row-reverse gap-2 items-center  z-10"
+              onClick={() =>
+                handleFavoriteToggle(product._id, product.isFavoris)
+              }
+            >
+              {!product.isFavoris && (
+                <lord-icon
+                  src="https://cdn.lordicon.com/ohfmmfhn.json"
+                  trigger="morph"
+                  state="morph-slider"
+                  colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
+                  style={{ width: "50px", height: "45px" }}
+                ></lord-icon>
+              )}
+
+              {product.isFavoris && (
+                <lord-icon
+                  src="https://cdn.lordicon.com/ohfmmfhn.json"
+                  trigger="morph"
+                  state="morph-heart-broken"
+                  colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
+                  style={{ width: "50px", height: "45px" }}
+                ></lord-icon>
+              )}
+            </div>
           </div>
           <Collapse
             bordered={false}

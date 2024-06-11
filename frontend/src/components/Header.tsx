@@ -13,9 +13,12 @@ export const Header = () => {
 
   return (
     <div className="w-full flex 3 items-center justify-between px-12  py-6 font-montserrat">
-      <AnimatedShinyText className="flex-1 text-3xl text-start tracking-wider">
-        ChicEth
-      </AnimatedShinyText>
+      <Link to="/" className="flex-1">
+        <AnimatedShinyText className=" text-3xl text-start tracking-wider">
+          ChicEth
+        </AnimatedShinyText>
+      </Link>
+
       <ul className="flex items-center justify-center gap-16 flex-1">
         <Link to="/men">Homme</Link>
         <Link to="/Women">Femme</Link>

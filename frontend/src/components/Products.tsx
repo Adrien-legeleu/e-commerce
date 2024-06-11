@@ -5,6 +5,7 @@ import { FilterComponent } from "./filter/FilterComponent";
 import lottie from "lottie-web";
 import { defineElement } from "@lordicon/element";
 import { Link } from "react-router-dom";
+import { useHeaderContext } from "../contexts/HeaderContext";
 
 // define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
@@ -17,6 +18,7 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productsFiltered, setProductsFiltered] = useState<IProduct[]>([]);
 
+  const { getProductsFavorites } = useHeaderContext();
   const fetchProducts = async () => {
     try {
       const response = await api.get<IProduct[]>("/products");
@@ -41,6 +43,8 @@ export const Products: React.FC<IProductProps> = ({ sexe }) => {
       await api.patch(`/products/favoris/${productId}`, {
         action: newStatus,
       });
+
+      getProductsFavorites();
 
       setProducts((prevProducts) =>
         prevProducts.map((product) =>

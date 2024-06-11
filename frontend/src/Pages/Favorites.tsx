@@ -4,10 +4,13 @@ import { api } from "../config/api";
 import { IProduct } from "../types/product";
 import { Link } from "react-router-dom";
 import { FilterComponent } from "../components/filter";
+import { useHeaderContext } from "../contexts/HeaderContext";
 
 export const Favorites = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [productsFiltered, setProductsFiltered] = useState<IProduct[]>([]);
+
+  const { getProductsFavorites } = useHeaderContext();
 
   const getProducts = async () => {
     try {
@@ -31,6 +34,8 @@ export const Favorites = () => {
       await api.patch(`/products/favoris/${productId}`, {
         action: newStatus,
       });
+
+      getProductsFavorites();
 
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
@@ -68,11 +73,11 @@ export const Favorites = () => {
                 key={`product-id-${product._id}`}
                 className="mb-10  h-full  group hover:scale-105 duration-200 relative"
               >
-                <Link
-                  to={`/${product._id}`}
-                  className="flex flex-col justify-end h-full "
-                >
-                  <div className="hover:scale-105 w-full space-y-5    cursor-pointer group duration-200">
+                <div className="hover:scale-105 w-full space-y-5    cursor-pointer group duration-200">
+                  <Link
+                    to={`/${product._id}`}
+                    className="flex flex-col justify-end h-full "
+                  >
                     <div className="relative group group-hover:shadow-2xl duration-200 rounded-2xl">
                       <img
                         className="rounded-2xl w-full object-cover aspect-[7/8]"
@@ -129,55 +134,52 @@ export const Favorites = () => {
                         </ul>
                       </div>
                     </div>
-                    <div className="flex justify-between">
-                      <div className="space-y-1">
-                        <h3 className="text-left text font-semibold text-blackGray tracking-wide">
-                          {product.title}
-                        </h3>
-                        <h4 className="text-left text-sm text-gray">
-                          {product.brand}
-                        </h4>
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-ld font-semibold text-blackGray tracking-wider">
-                          {product.price} €
-                        </h4>
+                  </Link>
+                  <div className="flex justify-between">
+                    <div className="space-y-1">
+                      <h3 className="text-left text font-semibold text-blackGray tracking-wide">
+                        {product.title}
+                      </h3>
+                      <h4 className="text-left text-sm text-gray">
+                        {product.brand}
+                      </h4>
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="text-ld font-semibold text-blackGray tracking-wider">
+                        {product.price} €
+                      </h4>
 
-                        <div className="flex flex-row-reverse gap-2 items-center  z-10 cursor-default">
-                          <div
-                            className="cursor-pointer"
-                            onClick={() =>
-                              handleFavoriteToggle(
-                                product._id,
-                                product.isFavoris
-                              )
-                            }
-                          >
-                            {!product.isFavoris && (
-                              <lord-icon
-                                src="https://cdn.lordicon.com/ohfmmfhn.json"
-                                trigger="morph"
-                                state="morph-slider"
-                                colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
-                                style={{ width: "50px", height: "30px" }}
-                              ></lord-icon>
-                            )}
+                      <div className="flex flex-row-reverse gap-2 items-center  z-10 cursor-default">
+                        <div
+                          className="cursor-pointer"
+                          onClick={() =>
+                            handleFavoriteToggle(product._id, product.isFavoris)
+                          }
+                        >
+                          {!product.isFavoris && (
+                            <lord-icon
+                              src="https://cdn.lordicon.com/ohfmmfhn.json"
+                              trigger="morph"
+                              state="morph-slider"
+                              colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
+                              style={{ width: "50px", height: "30px" }}
+                            ></lord-icon>
+                          )}
 
-                            {product.isFavoris && (
-                              <lord-icon
-                                src="https://cdn.lordicon.com/ohfmmfhn.json"
-                                trigger="morph"
-                                state="morph-heart-broken"
-                                colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
-                                style={{ width: "50px", height: "30px" }}
-                              ></lord-icon>
-                            )}
-                          </div>
+                          {product.isFavoris && (
+                            <lord-icon
+                              src="https://cdn.lordicon.com/ohfmmfhn.json"
+                              trigger="morph"
+                              state="morph-heart-broken"
+                              colors="primary:#c71f16,secondary:#c71f16,quaternary:#c71f16"
+                              style={{ width: "50px", height: "30px" }}
+                            ></lord-icon>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               </div>
             );
           }

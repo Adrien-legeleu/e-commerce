@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import {
   Cart,
+  Checkout,
   Child,
   Favorites,
   Home,
@@ -19,6 +20,7 @@ export const RouterApp = () => {
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/:productId" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} />
     </Routes>
   );
 };

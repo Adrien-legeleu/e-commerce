@@ -2,17 +2,20 @@ import { createContext, ReactNode, useContext } from "react"; // Import from "re
 import { IProduct } from "../types/product";
 import { useEffect, useState } from "react";
 import { api } from "../config/api";
+import { IProductCart } from "../types/productCart";
 
 interface HeaderContextProps {
-  productsToCart: IProduct[];
+  productsToCart: IProductCart[];
   favorisNbr: number;
   getProductsCart: () => void;
+  getProductsFavorites: () => void;
 }
 
 export const HeaderContext = createContext<HeaderContextProps>({
   productsToCart: [],
   favorisNbr: 0,
   getProductsCart: () => {},
+  getProductsFavorites: () => {},
 });
 
 export const HeaderContextProvider = ({
@@ -21,10 +24,10 @@ export const HeaderContextProvider = ({
   children: ReactNode;
 }) => {
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [productsToCart, setProductsToCart] = useState<IProduct[]>([]);
+  const [productsToCart, setProductsToCart] = useState<IProductCart[]>([]);
   const [favorisNbr, setFavorisNbr] = useState(0);
 
-  const getProducts = async () => {
+  const getProductsFavorites = async () => {
     try {
       const response = await api.get<IProduct[]>("/products");
       setProducts(response.data);
@@ -35,10 +38,17 @@ export const HeaderContextProvider = ({
 
   const getProductsCart = async () => {
     try {
-      const response = await api.get<IProduct[]>("/products/cart");
-      setProductsToCart(response.data);
+      const response = await api.get<IProductCart[]>("products/cart");
+
+      const productsToAdd: IProductCart[] = response.data.filter(
+        (product: any) => product.isToCart
+      );
+
+      if (productsToAdd.length > 0) {
+        setProductsToCart(productsToAdd);
+      }
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.log("error get products : " + error);
     }
   };
 
@@ -53,7 +63,7 @@ export const HeaderContextProvider = ({
   };
 
   useEffect(() => {
-    getProducts();
+    getProductsFavorites();
     getProductsCart();
   }, []);
 
@@ -63,7 +73,12 @@ export const HeaderContextProvider = ({
 
   return (
     <HeaderContext.Provider
-      value={{ productsToCart, favorisNbr, getProductsCart }}
+      value={{
+        productsToCart,
+        favorisNbr,
+        getProductsCart,
+        getProductsFavorites,
+      }}
     >
       {children}
     </HeaderContext.Provider>
