@@ -7,6 +7,7 @@ import { IProductCart } from "../types/productCart";
 import { Link } from "react-router-dom";
 import { useHeaderContext } from "../contexts/HeaderContext";
 import { toast } from "react-toastify";
+import GradualSpacing from "../components/design/GradualSpacing";
 
 export const Cart = () => {
   const [products, setProducts] = useState<IProductCart[]>([]);
@@ -110,7 +111,7 @@ export const Cart = () => {
       <div className="grid grid-cols-60/40 justify-center h-screen pt-20 pl-12">
         <div>
           <h1 className="text-5xl text-center pb-12">Votre panier</h1>
-          <div className="grid grid-cols-1 w-full gap-20">
+          <div className="grid grid-cols-1 w-full gap-12">
             {products.map((product, index) => (
               <div
                 key={`product-to-cart-number-${index}`}
@@ -162,20 +163,28 @@ export const Cart = () => {
         </div>
         <div className="w-full px-12">
           <div className="bg-[#F9FAFB] py-8 px-5 rounded-3xl">
-            <h2 className="text-2xl">Résumé de la commande</h2>
+            <h2 className="text-2xl">
+              <GradualSpacing text="Résumé de la commande" />
+            </h2>
             <div className="flex gap-4 flex-col my-6">
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
-                <h6 className="text-[#6b7280] text-lg">Total</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Total" />
+                </h6>
                 <p className="font-semibold">{totalPrice} $</p>
               </div>
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
-                <h6 className="text-[#6b7280] text-lg">Prix de la livraison</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Prix de la livraison" />
+                </h6>
                 <p className="font-semibold">
                   {products.length > 0 ? "5,00 $" : "0 $"}
                 </p>
               </div>
               <div className="flex justify-between pb-5 border-b-[1px] border-[#6b72801e]">
-                <h6 className="text-[#6b7280] text-lg">Date de livraison</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Livraison" />
+                </h6>
                 <p>
                   {minDeliveryDate
                     ? minDeliveryDate.toLocaleDateString()

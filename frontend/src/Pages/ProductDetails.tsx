@@ -11,6 +11,7 @@ import { ChevronRight } from "lucide-react";
 import lottie from "lottie-web";
 import { defineElement } from "@lordicon/element";
 import { useHeaderContext } from "../contexts/HeaderContext";
+import GradualSpacing from "../components/design/GradualSpacing";
 
 // define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
@@ -232,12 +233,15 @@ export const ProductDetails = () => {
         <Slider images={product.imgUrl} />
         <div className="w-full space-y-10">
           <div className="space-y-1">
-            <h1 className="text-4xl capitalize font-semibold text-blackGray">
-              {product.title}
+            <h1 className="text-3xl t>ext-left capitalize font-semibold text-blackGray">
+              <GradualSpacing text={product.title} />
             </h1>
-            <h2 className="text-2xl text-gray">{product.brand}</h2>
-            <p className="text-2xl font-semibold text-blackGray">
-              {product.price} €
+            <h2 className="text-2xl text-gray">
+              {" "}
+              <GradualSpacing text={product.brand} />
+            </h2>
+            <p className="text-2xl font-semibold text-blackGray flex gap-1">
+              <GradualSpacing text={product.price.toString()} />€
             </p>
           </div>
           <div className="space-y-6 pt-4">

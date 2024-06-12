@@ -6,6 +6,8 @@ import ShimmerButton from "../components/design/ShimmerButton";
 import { api } from "../config/api";
 import { IProductCart } from "../types/productCart";
 import BoxReveal from "../components/design/BoxReveal"; // Correct import path
+import GradualSpacing from "../components/design/GradualSpacing";
+import WavyText from "../components/design/WaveText";
 
 export const Checkout = () => {
   const [productsCart, setproductsCart] = useState<IProductCart[]>([]);
@@ -138,21 +140,27 @@ export const Checkout = () => {
             </BoxReveal>
           </div>
         </div>
-        <div className="w-full px-2 space-y-5">
+        <div className="w-full px-2 space-y-5 tracking-wide">
           <div className="bg-white shadow-lg  py-8 space-y-5 px-6 rounded-2xl border-[#55555527] border-[1px] ">
             <div className="flex gap-4 flex-col">
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
-                <h6 className="text-[#6b7280] text-lg">Total</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Total" />
+                </h6>
                 <p className="font-semibold">{totalPrice} $</p>
               </div>
               <div className="flex justify-between items-center border-b-[1px] border-[#6b72801e] pb-5">
-                <h6 className="text-[#6b7280] text-lg">Prix de la livraison</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Prix de la livraison" />
+                </h6>
                 <p className="font-semibold">
                   {productsCart.length > 0 ? "5,00 $" : "0 $"}
                 </p>
               </div>
               <div className="flex justify-between items-center pb-5 border-b-[1px] border-[#6b72801e]">
-                <h6 className="text-[#6b7280] text-lg">Livraison</h6>
+                <h6 className="text-[#6b7280] text-lg">
+                  <GradualSpacing text="Livraison" />
+                </h6>
                 <p className="font-medium">
                   {minDeliveryDate
                     ? minDeliveryDate.toLocaleDateString()
@@ -164,7 +172,9 @@ export const Checkout = () => {
                 </p>
               </div>
               <div className="flex justify-between pb-5">
-                <h6 className="text-xl font-semibold">Total de la commande</h6>
+                <h6 className="text-xl font-semibold">
+                  <GradualSpacing text="Total de la commande" />
+                </h6>
                 <p className="font-semibold text-lg">{totalPrice + 5} $</p>
               </div>
             </div>
@@ -177,7 +187,9 @@ export const Checkout = () => {
             </div>
           </div>
           <div className="bg-white shadow-lg  py-5 space-y-5 px-6 rounded-2xl border-[#55555527] border-[1px] font-medium text-center text-lg capitalize text-blackGray">
-            <h3 className="pb-2">Votre commande</h3>
+            <h3 className="pb-2">
+              <GradualSpacing text="Votre Commande" />
+            </h3>
             {productsCart.map((product, index) =>
               index < 3 ? (
                 <div
