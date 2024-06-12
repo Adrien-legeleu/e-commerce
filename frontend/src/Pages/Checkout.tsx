@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Header } from "../components";
+import { Header, ModalCartCheckout } from "../components";
 import { Input } from "../components/design/Input";
 import { Label } from "../components/design/Label";
 import ShimmerButton from "../components/design/ShimmerButton";
@@ -12,6 +12,7 @@ export const Checkout = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [minDeliveryDate, setMinDeliveryDate] = useState<Date | null>(null);
   const [maxDeliveryDate, setMaxDeliveryDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getProductsCart = async () => {
     try {
@@ -59,11 +60,15 @@ export const Checkout = () => {
     setMaxDeliveryDate(newMaxDeliveryDate);
   };
 
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div>
       <Header />
-      <div className="grid grid-cols-63/37 px-20 pt-16 gap-16 font-montserrat">
-        <div className="grid grid-cols-2 gap-8 max-h-[calc(100vh-200px)] relative">
+      <div className="grid grid-cols-63/37 px-16 pt-16 gap-12 font-montserrat">
+        <div className="grid grid-cols-2 gap-8 max-h-[calc(100vh-200px)] relative pr-12">
           <div>
             <Label htmlFor="email">Votre nom</Label>
             <BoxReveal width={"100%"}>
@@ -133,8 +138,8 @@ export const Checkout = () => {
             </BoxReveal>
           </div>
         </div>
-        <div className="w-full px-4">
-          <div className="bg-[#F9FAFB] py-8 space-y-4 px-6 rounded-3xl">
+        <div className="w-full px-2 space-y-5">
+          <div className="bg-white shadow-lg  py-8 space-y-5 px-6 rounded-2xl border-[#55555527] border-[1px] ">
             <div className="flex gap-4 flex-col">
               <div className="flex justify-between border-b-[1px] border-[#6b72801e] pb-5">
                 <h6 className="text-[#6b7280] text-lg">Total</h6>
@@ -147,11 +152,11 @@ export const Checkout = () => {
                 </p>
               </div>
               <div className="flex justify-between items-center pb-5 border-b-[1px] border-[#6b72801e]">
-                <h6 className="text-[#6b7280] text-lg">Date de livraison</h6>
-                <p>
+                <h6 className="text-[#6b7280] text-lg">Livraison</h6>
+                <p className="font-medium">
                   {minDeliveryDate
                     ? minDeliveryDate.toLocaleDateString()
-                    : "N/A"}
+                    : "N/A"}{" "}
                   -{" "}
                   {maxDeliveryDate
                     ? maxDeliveryDate.toLocaleDateString()
@@ -170,46 +175,56 @@ export const Checkout = () => {
                 </span>
               </ShimmerButton>
             </div>
-            <div>
-              <h3>Votre commande :</h3>
-              {productsCart.map((product, index) =>
-                index < 3 ? (
-                  <div
-                    key={`product-to-cart-number-${index}`}
-                    className="flex border-b-[2px] py-2 border-[#6b728011] h-16 relative"
-                  >
-                    <div className="h-full">
-                      <img
-                        src={product.imgUrl}
-                        className="rounded-md shadow-xl h-full aspect-[4/5] object-cover"
-                        alt={`img de ${product.title}`}
-                      />
-                    </div>
-                    <div className="relative left-5 flex flex-col justify-between">
-                      <div className="space-y-1">
-                        <h1 className="text-sm">{product.title}</h1>
-                        <div className="flex gap-5 text-[#6B7280] text-[0.7rem]">
-                          <p>{product.color}</p>
-                          <p>{product.size}</p>
-                          <p className="font-semibold">${product.price}</p>
-                        </div>
+          </div>
+          <div className="bg-white shadow-lg  py-5 space-y-5 px-6 rounded-2xl border-[#55555527] border-[1px] font-medium text-center text-lg capitalize text-blackGray">
+            <h3 className="pb-2">Votre commande</h3>
+            {productsCart.map((product, index) =>
+              index < 3 ? (
+                <div
+                  key={`product-to-cart-number-${index}`}
+                  className="flex border-b-[2px] py-2 border-[#6b728011] h-20 relative"
+                >
+                  <div className="h-full">
+                    <img
+                      src={product.imgUrl}
+                      className="rounded-md shadow-xl h-full aspect-[4/5] object-cover"
+                      alt={`img de ${product.title}`}
+                    />
+                  </div>
+                  <div className="relative left-5 flex flex-col justify-between">
+                    <div className="space-y-1">
+                      <h1 className="text-sm">{product.title}</h1>
+                      <div className="flex gap-5 text-[#6B7280] text-[0.8rem]">
+                        <p>{product.color}</p>
+                        <p>{product.size}</p>
+                        <p className="font-semibold">${product.price}</p>
                       </div>
                     </div>
                   </div>
-                ) : (
-                  index === 3 && (
-                    <div key={`product-to-cart-number-${index}`}>
-                      <h4 className="text-4xl text-center font-semibold">
-                        {productsCart.length - 3}+
-                      </h4>
-                    </div>
-                  )
+                </div>
+              ) : (
+                index === 3 && (
+                  <div
+                    key={`product-to-cart-number-${index}`}
+                    className="bg-gray p-5 rounded-2xl w-12 h-12 flex items-center justify-center m-auto mt-5 hover:scale-105 ease-in-out cursor-pointer duration-150"
+                    onClick={handleModal}
+                  >
+                    <h4 className="text-xl text-center font-semibold">
+                      {productsCart.length - 3}+
+                    </h4>
+                  </div>
                 )
-              )}
-            </div>
+              )
+            )}
           </div>
         </div>
       </div>
+
+      <ModalCartCheckout
+        productsCart={productsCart}
+        handleModal={handleModal}
+        isModalOpen={isModalOpen}
+      />
     </div>
   );
 };
