@@ -3,14 +3,14 @@ import { useEffect, useRef } from "react";
 
 interface BoxRevealProps {
   children: JSX.Element;
-  width?: "fit-content" | "100%";
+  width?:  "100%";
   boxColor?: string;
   duration?: number;
 }
 
 export const BoxReveal = ({
   children,
-  width = "fit-content",
+  width = "100%",
   boxColor,
   duration,
 }: BoxRevealProps) => {
