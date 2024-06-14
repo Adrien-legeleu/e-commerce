@@ -45,7 +45,7 @@ export const Auth = () => {
         >
           <LetterPullup
             words="Bienvenue dans votre e-commerce"
-            className="text-5xl font-semibold text-center"
+            className="text-5xl font-medium text-center"
           />
           {isLogin ? <Login /> : <Register />}
           <div className="flex flex-col items-center justify-center gap-6">
