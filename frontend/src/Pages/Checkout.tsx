@@ -5,9 +5,9 @@ import { Label } from "../components/design/Label";
 import ShimmerButton from "../components/design/ShimmerButton";
 import { api } from "../config/api";
 import { IProductCart } from "../types/productCart";
-import BoxReveal from "../components/design/BoxReveal"; // Correct import path
+import BoxReveal from "../components/design/BoxReveal";
 import GradualSpacing from "../components/design/GradualSpacing";
-import WavyText from "../components/design/WaveText";
+import { toast } from "react-toastify";
 
 export const Checkout = () => {
   const [productsCart, setproductsCart] = useState<IProductCart[]>([]);
@@ -66,15 +66,55 @@ export const Checkout = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  const genererIdentifiantUnique = (length: number) => {
+    const tableau = new Uint8Array(length / 2);
+    window.crypto.getRandomValues(tableau);
+    return Array.from(tableau, (byte) =>
+      byte.toString(16).padStart(2, "0")
+    ).join("");
+  };
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const values = {
+      name: data.get("name"),
+      email: data.get("email"),
+      tel: data.get("tel"),
+      country: data.get("country"),
+      city: data.get("city"),
+      adress: data.get("adress"),
+      zipCode: data.get("zipCode"),
+      cartorder: productsCart,
+      userId: genererIdentifiantUnique(64),
+    };
+    console.log(values);
+    try {
+      await api.post("order", values);
+      window.location.href = "/thanks";
+    } catch (error: any) {
+      toast.error("error to order :" + error);
+    }
+  };
+
   return (
     <div>
       <Header />
-      <div className="grid grid-cols-63/37 px-16 pt-16 gap-12 font-montserrat">
+      <form
+        className="grid grid-cols-63/37 px-16 pt-16 gap-12 font-montserrat"
+        onSubmit={onSubmit}
+      >
         <div className="grid grid-cols-2 gap-8 max-h-[calc(100vh-200px)] relative pr-12">
           <div>
-            <Label htmlFor="email">Votre nom</Label>
+            <Label htmlFor="name">Votre nom</Label>
             <BoxReveal width={"100%"}>
-              <Input id="email" placeholder="Lucas" type="email" required />
+              <Input
+                id="name"
+                placeholder="Lucas"
+                type="name"
+                name="name"
+                required
+              />
             </BoxReveal>
           </div>
           <div>
@@ -84,6 +124,7 @@ export const Checkout = () => {
                 id="email"
                 placeholder="projectmayhem@fc.com"
                 type="email"
+                name="email"
                 required
               />
             </BoxReveal>
@@ -95,6 +136,7 @@ export const Checkout = () => {
                 id="tel"
                 placeholder="06 73 45 37 20"
                 type="tel"
+                name="tel"
                 required
               />
             </BoxReveal>
@@ -102,7 +144,13 @@ export const Checkout = () => {
           <div>
             <Label htmlFor="country">Pays</Label>
             <BoxReveal width={"100%"}>
-              <Input id="country" placeholder="France" type="text" required />
+              <Input
+                id="country"
+                name="country"
+                placeholder="France"
+                type="text"
+                required
+              />
             </BoxReveal>
           </div>
           <div>
@@ -110,7 +158,8 @@ export const Checkout = () => {
             <BoxReveal width={"100%"}>
               <Input
                 id="city"
-                placeholder="projectmayhem@fc.com"
+                name="city"
+                placeholder="Paris"
                 type="text"
                 required
               />
@@ -123,16 +172,18 @@ export const Checkout = () => {
                 id="adress"
                 placeholder="15 rue de paris"
                 type="text"
+                name="adress"
                 required
               />
             </BoxReveal>
           </div>
           <div className="w-full">
-            <Label htmlFor="postal">Code postale</Label>
+            <Label htmlFor="zipCode">Code postale</Label>
             <BoxReveal width={"100%"}>
               <Input
                 id="postal"
                 placeholder="91120"
+                name="zipCode"
                 type="text"
                 required
                 className="w-full"
@@ -179,7 +230,10 @@ export const Checkout = () => {
               </div>
             </div>
             <div className="z-10 flex items-center justify-center">
-              <ShimmerButton className="shadow-2xl hover:translate-x-1 ease-in-out">
+              <ShimmerButton
+                className="shadow-2xl hover:translate-x-1 ease-in-out"
+                type="submit"
+              >
                 <span className="whitespace-pre-wrap text-center text-sm font-medium leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 lg:text-md xl:text-lg">
                   Commander
                 </span>
@@ -230,7 +284,7 @@ export const Checkout = () => {
             )}
           </div>
         </div>
-      </div>
+      </form>
 
       <ModalCartCheckout
         productsCart={productsCart}

@@ -7,6 +7,7 @@ import {
   Home,
   Men,
   ProductDetails,
+  ThanksPage,
   Women,
 } from "../Pages";
 
@@ -21,6 +22,7 @@ export const RouterApp = () => {
       <Route path="/:productId" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/thanks" element={<ThanksPage />} />
     </Routes>
   );
 };
