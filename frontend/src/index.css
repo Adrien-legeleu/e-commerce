@@ -2,6 +2,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .mask-radial-gradient {
+        mask-image: radial-gradient(100vmin circle at center, black, transparent);
+    }
+}
+
+
 *{
     margin: 0;
     padding: 0;

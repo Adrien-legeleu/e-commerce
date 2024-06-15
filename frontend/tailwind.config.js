@@ -13,6 +13,7 @@ module.exports = {
         gray: "#989999",
         grayLight: "#F3F4F6",
       },
+
       gridTemplateColumns: {
         "60/40": "60% 40%",
         "55/45": "55% 45%",
