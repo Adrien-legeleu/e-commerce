@@ -1,17 +1,35 @@
+/* Import de la police Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+/* Import de Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Styles pour les utilitaires Tailwind */
 @layer utilities {
     .mask-radial-gradient {
         mask-image: radial-gradient(100vmin circle at center, black, transparent);
     }
 }
 
-
-*{
+/* Réinitialisation des styles pour tout l'élément */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Styles de la scrollbar */
+/* Pseudo-élément pour le pouce de la scrollbar */
+::-webkit-scrollbar-thumb {
+    background-color: red;
+    border: 4px solid transparent;
+    border-radius: 8px;
+    background-clip: padding-box;
+}
+
+/* Pseudo-élément pour la scrollbar elle-même */
+::-webkit-scrollbar {
+    width: 16px;
 }
