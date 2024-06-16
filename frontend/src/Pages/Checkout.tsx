@@ -85,15 +85,18 @@ export const Checkout = () => {
       city: data.get("city"),
       adress: data.get("adress"),
       zipCode: data.get("zipCode"),
-      cartorder: productsCart,
-      userId: genererIdentifiantUnique(64),
+      cartOrder: productsCart, // Assurez-vous que c'est bien "cartOrder" et non "cartorder"
+      price: totalPrice,
+      userId: genererIdentifiantUnique(20),
     };
-    console.log(values);
+
+    console.log("Valeurs du formulaire : ", values);
+
     try {
       await api.post("order", values);
-      window.location.href = "/thanks";
+      // window.location.href = "/thanks";
     } catch (error: any) {
-      toast.error("error to order :" + error);
+      toast.error("Erreur lors de la commande : " + error);
     }
   };
 

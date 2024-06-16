@@ -34,6 +34,7 @@ export const ProductDetails = () => {
       isFavoris: undefined,
       favoris: undefined,
       isToCart: false,
+      brand: undefined,
     }
   );
   const [triggerAddToCart, setTriggerAddToCart] = useState(false);
@@ -45,6 +46,8 @@ export const ProductDetails = () => {
       ...prev,
       [key]: value,
     }));
+
+    console.log(dataProductCart);
   };
 
   const fetchProduct = async () => {
@@ -67,6 +70,7 @@ export const ProductDetails = () => {
         favoris: response.data?.favoris,
         isToCart: false,
         productId: response.data?._id,
+        brand: response.data?.brand,
       });
     } catch (error) {
       console.error(error);

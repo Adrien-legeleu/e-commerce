@@ -10,6 +10,7 @@ export interface IProductCart {
   color: string;
   size: string;
   status: string;
+  brand: string;
   sexe: string;
   deliveryDate: number;
   favoris: number;

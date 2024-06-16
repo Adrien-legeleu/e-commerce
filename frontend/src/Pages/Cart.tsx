@@ -26,6 +26,7 @@ export const Cart = () => {
       setProducts(productsToAdd);
       calculateDeliveryDate(productsToAdd); // Calculate delivery dates here
       calculateTotalPrice(productsToAdd); // Calculate total price here
+      console.log(response.data);
     } catch (error) {
       console.log("error get products : " + error);
     }
@@ -108,7 +109,7 @@ export const Cart = () => {
   return (
     <div>
       <Header />
-      <div className="grid grid-cols-60/40 justify-center h-screen pt-20 pl-12">
+      <div className="grid grid-cols-60/40 justify-center h-screen pt-20 pl-12 font-montserrat">
         <div>
           <h1 className="text-5xl text-center pb-12">Votre panier</h1>
           <div className="grid grid-cols-1 w-full gap-12">
@@ -128,7 +129,14 @@ export const Cart = () => {
                     </div>
                     <div className="flex-1 relative left-5 flex flex-col justify-between">
                       <div className="space-y-1">
-                        <h1>{product.title}</h1>
+                        <div>
+                          <h1 className="text-xl text-blackGray font-medium">
+                            {product.title}
+                          </h1>
+                          <h2 className="text-blackGray font-medium">
+                            {product.brand}
+                          </h2>
+                        </div>
                         <div className="flex gap-5 text-[#6B7280]">
                           <p>{product.color}</p>
                           <p>{product.size}</p>
