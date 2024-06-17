@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { Auth, Home } from "../Pages";
+import { Auth, CartOrder, Home } from "../Pages";
 import { useAdminContext } from "../contexts/userContext";
 import { ProductDetails } from "../components/products";
 
@@ -11,6 +11,7 @@ export const Router = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/:productId" element={<ProductDetails />} />
+        <Route path="/order" element={<CartOrder />} />
       </Routes>
     </div>
   ) : (

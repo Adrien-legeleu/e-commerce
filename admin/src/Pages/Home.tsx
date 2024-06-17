@@ -3,7 +3,7 @@ import { Products } from "../components/products";
 
 export const Home = () => {
   return (
-    <div className="font-montserrat">
+    <div>
       <Header />
       <Products />
     </div>

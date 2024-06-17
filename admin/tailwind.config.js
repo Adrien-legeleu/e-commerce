@@ -18,6 +18,10 @@ module.exports = {
         "spin-around": "spin-around calc(var(--speed) * 2) infinite linear",
         slide: "slide var(--speed) ease-in-out infinite alternate",
         shimmer: "shimmer 8s infinite",
+        underline: "underline 0.5s ease-out forwards", // Duration adjusted for a smooth transition
+      },
+      boxShadow: {
+        order: "inset 0 0 40px 10px red",
       },
       keyframes: {
         aurora: {
@@ -50,17 +54,13 @@ module.exports = {
             transform: "translateZ(0) rotate(360deg)",
           },
         },
-        slide: {
-          to: {
-            transform: "translate(calc(100cqw - 100%), 0)",
-          },
-        },
       },
       fontFamily: {
         montserrat: ["Montserrat"],
       },
       gridTemplateColumns: {
         "55/45": "55% 45%",
+        "40/60": "40% 60%",
       },
     },
   },
